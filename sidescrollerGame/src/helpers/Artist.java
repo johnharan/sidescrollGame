@@ -24,6 +24,7 @@ import java.io.InputStream;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -47,8 +48,8 @@ public class Artist {
 		glOrtho(0,Display.getWidth(),Display.getHeight(),0,1,-1);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_TEXTURE_2D); 
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
+		GL11.glClearColor(0.74f, 0.83f, 0.98f, 1); // gives a light blue colour, get rgb colour and calculate rgb colour/255
+			
 	}
 	
 	public static void drawQuad(float x, float y, float width, float height){
