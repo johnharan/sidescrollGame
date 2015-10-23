@@ -33,7 +33,7 @@ public class Artist {
 	
 	public static void beginSession(){
 		Display.setTitle("Pong");
-		
+		\\test github edit
 		try {
 			//Display.getDesktopDisplayMode();
 			Display.setFullscreen(true);
