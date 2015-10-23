@@ -32,7 +32,7 @@ public class Artist {
 
 	
 	public static void beginSession(){
-		Display.setTitle("Pong");
+		Display.setTitle("Grapple and Bounce");
 		
 		try {
 			//Display.getDesktopDisplayMode();
