@@ -9,7 +9,7 @@ public class InputManager {
 		while(Keyboard.next()){
 			if (Keyboard.getEventKey() == Keyboard.KEY_UP) {
 			    if (Keyboard.getEventKeyState()) { // on key press
-			    	GameObjects.getBall().setY(GameObjects.getBall().getY() - 10 * Clock.getDelta());
+			    	GameObjects.getBall().jump();
 			    }else{ // on key release
 			    	
 			    }
