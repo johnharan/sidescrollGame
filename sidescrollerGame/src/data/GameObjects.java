@@ -12,13 +12,14 @@ public class GameObjects {
 	private static Foreground foreground;
 	
 	public static void loadGameObjects(){
-		ball = new Ball(150,478,70,40);
+		ball = new Ball(550,478,70,40);
 		foreground = new Foreground();
 		
 		SolidGround large = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,Display.getHeight()-512,1024,512);
-		
+		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1600,Display.getHeight()-512,1024,512);
 		// texture width/height must be multiple of 16
 		foreground.addElement(large);
+		foreground.addElement(large2);
 
 		
 	}

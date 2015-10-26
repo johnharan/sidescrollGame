@@ -3,11 +3,13 @@ package Foreground;
 import java.util.ArrayList;
 
 public class Foreground {
-	
+
 	private ArrayList<Foreground> elements = new ArrayList<Foreground>();
 	
 	public void update(){
-		
+		for(Foreground o: elements){
+			
+		}
 	}
 	
 	public void draw(){
@@ -23,5 +25,21 @@ public class Foreground {
 	public void removeElement(Foreground o){
 		elements.remove(o);
 	}
+	
+	public ArrayList<Foreground> getForegroundElements(){
+		return elements;
+	}
+	
+	public float getX() {
+		return 0.0f;
+	}
 
+	public void setX(float x) {}
+
+	public float getY() {
+		return 0.0f;
+	}
+
+	public void setY(float y) {}
+	
 }

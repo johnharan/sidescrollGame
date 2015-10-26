@@ -32,6 +32,9 @@ public class Ball {
 		if(y >= Display.getHeight() + 100){
 			y = Display.getHeight() + 100;
 		}
+		if(x <= GameObjects.getForeground().getForegroundElements().get(0).getX() + radius){
+			x = GameObjects.getForeground().getForegroundElements().get(0).getX() + radius;
+		}
 	}
 
 	public float getY() {

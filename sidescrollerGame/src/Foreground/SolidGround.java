@@ -16,8 +16,30 @@ public class SolidGround extends Foreground{
 		this.text = text;
 	}
 	
+	public void update(){
+		
+	}
+	
 	public void draw(){
 		drawQuadTexture(text, x, y, width, height);
 	}
 
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	
+	
 }

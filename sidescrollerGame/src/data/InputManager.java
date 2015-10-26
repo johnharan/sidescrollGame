@@ -1,6 +1,9 @@
 package data;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+
+import Foreground.Foreground;
 
 public class InputManager {
 
@@ -19,13 +22,29 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 			Boot.shutdown = true;
 		}
+
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
-			GameObjects.getBall().setX(GameObjects.getBall().getX() - 1 * Clock.getDelta());
+			if(GameObjects.getBall().getX() <= 200 && isBallAtStart()){
+				for(Foreground o: GameObjects.getForeground().getForegroundElements()){
+					o.setX(o.getX() + 0.7f * Clock.getDelta());
+				}
+			}else{
+				GameObjects.getBall().setX(GameObjects.getBall().getX() - 1 * Clock.getDelta());
+			}	
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-			GameObjects.getBall().setX(GameObjects.getBall().getX() + 1 * Clock.getDelta());
-		}
+			if(GameObjects.getBall().getX() >= Display.getWidth() - 800){
+				for(Foreground o: GameObjects.getForeground().getForegroundElements()){
+					o.setX(o.getX() - 0.7f * Clock.getDelta());
+				}
+			}else{
+				GameObjects.getBall().setX(GameObjects.getBall().getX() + 1 * Clock.getDelta());
+			}	
+		}	
 	}
 	
+	public boolean isBallAtStart(){
+		return (GameObjects.getBall().getX() - GameObjects.getForeground().getForegroundElements().get(0).getX() >= 220);
+	}
 	
 }
