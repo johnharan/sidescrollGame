@@ -9,7 +9,7 @@ import data.GameObjects;
 public class Play implements GameState{
 
 	public void updateState() {
-
+		GameObjects.getBall().updateBall();
 	}
 
 	public void drawState() {
