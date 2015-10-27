@@ -20,7 +20,7 @@ public class Ball {
 	}
 	
 	public void gravity(){
-		y += 0.1f * Clock.getDelta();
+		y += 0.5f * Clock.getDelta();
 	}
 	
 	public void updateBall(){
@@ -44,21 +44,28 @@ public class Ball {
 		
 		
 		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
+			boolean isInsideLeftAndRight = (Boolean) (x >= o.getX() - halfRadius ? x <= (o.getX() + o.getWidth() + halfRadius):false);
+			boolean isOnTop = (Boolean) (y >= o.getY() - radius ? y <= (o.getY() - radius + 20):false);
+			boolean isOnBottom = (Boolean) (y <= (o.getY() + o.getHeight() + radius) ? y >= (o.getY() + o.getHeight() - 20):false);
+			boolean isInsideTopAndBottom = (Boolean) (y >= o.getY() - halfRadius ? y <= (o.getY() + o.getHeight() + halfRadius):false);
+			boolean isOnLeft = (Boolean) (x >= o.getX() - radius ? x <= (o.getX() + 20):false);
+			boolean isOnRight = (Boolean) (x <= (o.getX() + o.getWidth() + radius) ? x >= (o.getX() + o.getWidth() - 20):false);
+			
 			// top of element
-			if(y >= o.getY() - radius && y <= (o.getY() - radius + 20) && x >= o.getX() - halfRadius && x <= (o.getX() + o.getWidth() + halfRadius) ){ // stops ball at top/surface of an element
+			if(isOnTop && isInsideLeftAndRight ){ // stops ball at top/surface of an element
 				y = o.getY() - radius;
 			}
 			
-			if(y <= (o.getY() + o.getHeight() + radius) && y >= (o.getY() + o.getHeight() - 20) && x >= o.getX() - halfRadius && x <= (o.getX() + o.getWidth() + halfRadius) ){ // stops ball at bottom of an element
+			if(isOnBottom && isInsideLeftAndRight ){ // stops ball at bottom of an element
 				y = o.getY() + o.getHeight() + radius;
 			}
 			
 			// sides of element
-			if(y >= o.getY() - halfRadius && y <= (o.getY() + o.getHeight() + halfRadius) && x >= o.getX() - radius && x <= (o.getX() + 20) ){ // stops ball at left hand side of an element
+			if(isOnLeft && isInsideTopAndBottom){ // stops ball at left hand side of an element
 				x = o.getX() - radius;
 			}
 			
-			if(y >= o.getY() - halfRadius && y <= (o.getY() + o.getHeight() + halfRadius) && x <= (o.getX() + o.getWidth() + radius) && x >= (o.getX() + o.getWidth() - 20) ){ // stops ball at right hand side of an element
+			if(isOnRight && isInsideTopAndBottom){ // stops ball at right hand side of an element
 				x = (o.getX() + o.getWidth() + radius);
 			}
 	
