@@ -42,4 +42,16 @@ public class Foreground {
 
 	public void setY(float y) {}
 	
+	public float getWidth() {
+		return 0.0f;
+	}
+
+	public void setWidth(float width) {}
+
+	public float getHeight() {
+		return 0.0f;
+	}
+
+	public void setHeight(float height) {}
+	
 }

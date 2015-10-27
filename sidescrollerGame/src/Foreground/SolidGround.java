@@ -32,6 +32,22 @@ public class SolidGround extends Foreground{
 		this.x = x;
 	}
 
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+
 	public float getY() {
 		return y;
 	}

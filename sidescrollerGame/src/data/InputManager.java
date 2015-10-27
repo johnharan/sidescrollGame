@@ -19,7 +19,7 @@ public class InputManager {
 			}
 		}
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){ // shutdown if escape key pressed
 			Boot.shutdown = true;
 		}
 
