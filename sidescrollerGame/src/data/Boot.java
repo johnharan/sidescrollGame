@@ -37,9 +37,7 @@ public class Boot {
 			
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-			//isEscapePressed();
-					
-			
+
 			switch(state){
 			case START:
 				System.out.println("Start");
@@ -58,23 +56,10 @@ public class Boot {
 		}
 		Display.destroy();
 	}
-
-	public void isEscapePressed(){
-		while(Keyboard.next()){
-			if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE){
-				shutdown = true;
-			}
-			if(Keyboard.getEventKey() == Keyboard.KEY_UP){
-				System.out.println("hi");
-			}
-		}	
-	}
 	
 	public static void main(String[] args){
 		new Boot();
 		
 	}
 
-
-	
 }
