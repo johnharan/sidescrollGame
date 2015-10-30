@@ -17,9 +17,6 @@ public class Play implements GameState{
 		GameObjects.getForeground().draw();
 	}
 	
-	public void updatePong(){
-
-	}
 	
 	public void timedMissAdjustment(){
 		if (Thread.activeCount() <= 10) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also

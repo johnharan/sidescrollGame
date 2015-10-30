@@ -12,7 +12,7 @@ public class GameObjects {
 	private static Foreground foreground;
 	
 	public static void loadGameObjects(){
-		ball = new Ball(1800,650,70,40);
+		ball = new Ball(700,350,70,40);
 		foreground = new Foreground();
 		
 		SolidGround large = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,Display.getHeight()-512,1024,512);

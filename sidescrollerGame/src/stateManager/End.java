@@ -1,5 +1,7 @@
 package stateManager;
 
+import data.GameObjects;
+
 
 public class End implements GameState{
 
@@ -8,7 +10,8 @@ public class End implements GameState{
 	}
 
 	public void drawState() {
-
+		GameObjects.getBall().drawBall();
+		GameObjects.getForeground().draw();
 	}
 
 	public void checkGameReset(){
