@@ -2,8 +2,7 @@ package data;
 
 import static helpers.Artist.drawCircle;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
+import stateManager.States;
 
 import Foreground.Foreground;
 
@@ -23,10 +22,22 @@ public class Ball {
 		y += 0.5f * Clock.getDelta();
 	}
 	
+	public boolean isBallAlive(){
+		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
+			if(y <= o.getY() + o.getHeight() + radius){ // checking if ball is above the bottom of any foreground object
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void updateBall(){
-		gravity();
-		collisionDetection();
-		
+		if(isBallAlive() == true){
+			gravity();
+			collisionDetection();
+		}else{
+			States.setState(States.GameStates.END);
+		}
 	}
 	
 	public void drawBall(){
@@ -35,9 +46,6 @@ public class Ball {
 	
 	public void collisionDetection(){
 		
-		if(y >= Display.getHeight() + 100){
-			y = Display.getHeight() + 100;
-		}
 		if(x <= GameObjects.getForeground().getForegroundElements().get(0).getX() + radius){ // if ball is at far left of first ground element
 			x = GameObjects.getForeground().getForegroundElements().get(0).getX() + radius;
 		}
@@ -70,22 +78,6 @@ public class Ball {
 	
 	}
 
-	public float getY() {
-		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
-	}
-
-	public float getX() {
-		return x;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-		
-	}
 	
 	public void jump(){
 		Foreground o = getClosestObject();
@@ -135,6 +127,24 @@ public class Ball {
 			}
 		}
 		return closestObject;
+	}
+	
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+		
 	}
 	
 }

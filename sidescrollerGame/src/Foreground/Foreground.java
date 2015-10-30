@@ -7,9 +7,9 @@ public class Foreground {
 	private ArrayList<Foreground> elements = new ArrayList<Foreground>();
 	
 	public void update(){
-		for(Foreground o: elements){
+		//for(Foreground o: elements){}
 			
-		}
+		
 	}
 	
 	public void draw(){

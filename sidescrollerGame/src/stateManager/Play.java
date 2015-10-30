@@ -1,12 +1,10 @@
 package stateManager;
 
 
-import static helpers.Artist.drawQuad;
 import data.GameObjects;
 
 
-
-public class Play implements GameState{
+public class Play implements GameStateInterface{
 
 	public void updateState() {
 		GameObjects.getBall().updateBall();

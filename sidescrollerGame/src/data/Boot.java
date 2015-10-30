@@ -4,22 +4,14 @@ import static helpers.Artist.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
-import stateManager.GameState;
-import stateManager.Play;
+import stateManager.States;
 
 public class Boot {
 	
 	public static boolean shutdown = false;
-	private Game_State state;
-	private GameState start,play,end;
 	private InputManager input;
-	
-	public enum Game_State{
-		START,PLAY,END;
-	}
 	
 	public Boot(){
 		beginSession();
@@ -28,9 +20,8 @@ public class Boot {
 		
 		input = new InputManager();
 		
-		state = Game_State.PLAY;
-		play = new Play();
-				
+		new States(States.GameStates.START);
+					
 		while(!shutdown){
 			Clock.update();
 			input.keyListen();	
@@ -38,16 +29,18 @@ public class Boot {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 
-			switch(state){
+			switch(States.getState()){
 			case START:
-				System.out.println("Start");
+				States.getInstance().drawState();
+				input.checkForReset();
 				break;
 			case PLAY:
-				play.updateState();
-				play.drawState();
+				States.getInstance().updateState();
+				States.getInstance().drawState();
 				break;
 			case END:
-				System.out.println("End");
+				States.getInstance().drawState();
+				input.checkForReset();
 				break;
 			}			
 			

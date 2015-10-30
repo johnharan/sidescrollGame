@@ -1,6 +1,6 @@
 package stateManager;
 
-public interface GameState {
+public interface GameStateInterface {
 	public void updateState();
 	public void drawState();
 }

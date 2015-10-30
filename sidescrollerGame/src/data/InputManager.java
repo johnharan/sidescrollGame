@@ -1,7 +1,10 @@
 package data;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+
+import stateManager.States;
 
 import Foreground.Foreground;
 
@@ -41,6 +44,39 @@ public class InputManager {
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + 1 * Clock.getDelta());
 			}	
 		}	
+	}
+	
+	public void checkForReset(){
+		int mouseY = Display.getHeight() - Mouse.getY(); // need to invert mouse y
+		// below checks for mouse click inside playAgain box
+
+		if(States.getState() == States.GameStates.END){
+			if (Mouse.isButtonDown(0)
+					&& Mouse.getX() >= Splashscreen.getPlayX()
+					&& Mouse.getX() <= Splashscreen.getPlayX() + Splashscreen.getPlay_again().getImageWidth()
+					&& mouseY >= Splashscreen.getPlayY()
+					&& mouseY <= Splashscreen.getPlayY() + Splashscreen.getPlay_again().getImageHeight()) {
+				// GameObjects.getBall().setX(GameObjects.getForeground().getForegroundElements().get(0).getX()
+				// + 400);
+				// GameObjects.getBall().setY(GameObjects.getForeground().getForegroundElements().get(0).getY()
+				// - 300);
+				GameObjects.loadGameObjects(); // lazy way to restart
+				States.setState(States.GameStates.PLAY);
+			}
+		}else if(States.getState() == States.GameStates.START){
+			if (Mouse.isButtonDown(0)
+					&& Mouse.getX() >= Splashscreen.getStartX()
+					&& Mouse.getX() <= Splashscreen.getStartX() + Splashscreen.getStart_game().getImageWidth()
+					&& mouseY >= Splashscreen.getStartY()
+					&& mouseY <= Splashscreen.getStartY() + Splashscreen.getStart_game().getImageHeight()) {
+				// GameObjects.getBall().setX(GameObjects.getForeground().getForegroundElements().get(0).getX()
+				// + 400);
+				// GameObjects.getBall().setY(GameObjects.getForeground().getForegroundElements().get(0).getY()
+				// - 300);
+				GameObjects.loadGameObjects(); // lazy way to restart
+				States.setState(States.GameStates.PLAY);
+			}
+		}
 	}
 	
 	public boolean isBallAtStart(){

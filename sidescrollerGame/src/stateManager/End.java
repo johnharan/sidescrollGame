@@ -1,20 +1,16 @@
 package stateManager;
 
-import data.GameObjects;
+import data.Splashscreen;
 
 
-public class End implements GameState{
+public class End implements GameStateInterface{
 
 	public void updateState() {
-
+		
 	}
 
 	public void drawState() {
-		GameObjects.getBall().drawBall();
-		GameObjects.getForeground().draw();
+		Splashscreen.draw();
 	}
 
-	public void checkGameReset(){
-
-	}
 }
