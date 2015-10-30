@@ -54,4 +54,10 @@ public class Foreground {
 
 	public void setHeight(float height) {}
 	
+	public float getRotation() {
+		return 0.0f;
+	}
+	
+	public void setRotation(float rotation) {}
+	
 }

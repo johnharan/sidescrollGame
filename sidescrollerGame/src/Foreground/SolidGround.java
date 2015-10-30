@@ -5,14 +5,15 @@ import static helpers.Artist.*;
 
 public class SolidGround extends Foreground{
 	
-	private float x, y, width, height;
+	private float x, y, width, height, rotation;
 	private Texture text;
 	
-	public SolidGround(Texture text, float x, float y, float width, float height){
+	public SolidGround(Texture text, float x, float y, float width, float height, float rotation){
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.rotation = rotation;
 		this.text = text;
 	}
 	
@@ -21,7 +22,7 @@ public class SolidGround extends Foreground{
 	}
 	
 	public void draw(){
-		drawQuadTexture(text, x, y, width, height);
+		drawQuadTexture(text, x, y, width, height, rotation);
 	}
 
 	public float getX() {
@@ -56,6 +57,13 @@ public class SolidGround extends Foreground{
 		this.y = y;
 	}
 
+	public float getRotation() {
+		return rotation;
+	}
+	
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
+	}
 	
 	
 }

@@ -19,14 +19,14 @@ public class Splashscreen {
 	
 	public static void draw(){
 		if(States.getState() == States.GameStates.START){
-			drawQuadTexture(intro,Display.getWidth()/2 - 500,Display.getHeight()/2 - 400,1024,512);
-			drawQuadTexture(start_game,startX,startY,256,128);
+			drawQuadTexture(intro,Display.getWidth()/2 - 500,Display.getHeight()/2 - 400,1024,512,0.0f);
+			drawQuadTexture(start_game,startX,startY,256,128,0.0f);
 		}else if(States.getState() == States.GameStates.PLAY){
 			
 			
 		}else if(States.getState() == States.GameStates.END){
-			drawQuadTexture(game_over,Display.getWidth()/2 - 275,Display.getHeight()/2 - 300,512,256);
-			drawQuadTexture(play_again,playX,playY,256,128);
+			drawQuadTexture(game_over,Display.getWidth()/2 - 275,Display.getHeight()/2 - 300,512,256,0.0f);
+			drawQuadTexture(play_again,playX,playY,256,128,0.0f);
 		}else{
 			System.out.println("Error in splashscreen update method");
 		}

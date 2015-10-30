@@ -80,11 +80,14 @@ public class Artist {
 		glLoadIdentity();
 	}
 	
-	public static void drawQuadTexture(Texture text, float x, float y, float width, float height){
+	public static void drawQuadTexture(Texture text, float x, float y, float width, float height, float rotation){
 		text.bind(); // sets current texture
 		// x,y are coords of top left vertex, gltranslate allows us to set coords of
 		// texture using local coords (0,0)-(1,0)-(1,1)-(0,1)
 	
+		GL11.glTranslatef(0.5f,0.5f,0.0f);
+		GL11.glRotatef(rotation,0.0f,0.0f,1.0f);
+		GL11.glTranslatef(-0.5f,-0.5f,0.0f);
 		glTranslatef(x,y,0); 
 		glBegin(GL_QUADS);
 		glTexCoord2f(0,0);
