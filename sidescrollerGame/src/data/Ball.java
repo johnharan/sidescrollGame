@@ -38,7 +38,7 @@ public class Ball {
 		float changeY = startY - y;
 		
 		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
-			o.setY(o.getY() + changeY/2);
+			o.setY(o.getY() + changeY/4);
 		}
 		
 	}
@@ -63,45 +63,62 @@ public class Ball {
 		HashMap<String,Float> rotatedCoords = new HashMap<String,Float>();
 		
 		Foreground o = getClosestObject();
-		float rotation = o.getRotation();
-		float rectX1 = o.getX(), rectY1 = o.getY();
-		float rectX2 = o.getX() + o.getWidth(), rectY2 = o.getY();
-		float rectX3 = o.getX() + o.getWidth(), rectY3 = o.getY() + o.getHeight();
-		float rectX4 = o.getX(), rectY4 = o.getY() + o.getHeight();
 
-		// below calculates new x and y values (after rotation)
-		float x1 = (float) (rectX1 * Math.cos((rotation * 3.149) / 180) + (rectY1 * Math
-				.sin((rotation * 3.149) / 180)));
-		float y1 = (float) (-rectX1 * Math.sin((rotation * 3.149) / 180) + (rectY1 * Math
-				.cos((rotation * 3.149) / 180)));
+		// below formula found on http://gamedev.stackexchange.com/questions/86755/how-to-calculate-corner-marks-of-a-rotated-rectangle
+		// cx, cy - center of square coordinates
+		// x, y - coordinates of a corner point of the square
+		// theta is the angle of rotation
 
+		// calculate cx and cy by adding half width and height from top left
+		float cx = o.getX() + (o.getWidth()/2), cy = o.getY() + (o.getHeight()/2);
+		float theta = (float) ((o.getRotation() * 3.149) / 180); // need to convert to radians for math functions
 		
-		float x2 = (float) (rectX2 * Math.cos((rotation * 3.149) / 180) + (rectY2 * Math
-				.sin((rotation * 3.149) / 180)));
-		float y2 = (float) (-rectX2 * Math.sin((rotation * 3.149) / 180) + (rectY2 * Math
-				.cos((rotation * 3.149) / 180)));
-		//float x2 = (float) (rectX2 * Math.cos((rotation * 3.149) / 180) - (rectY2 * Math
-		//		.sin((rotation * 3.149) / 180)));
-		//float y2 = (float) (rectY2 * Math.cos((rotation * 3.149) / 180) + (rectX2 * Math
-		//		.sin((rotation * 3.149) / 180)));
+		float tempX1 = o.getX() - cx;
+		float tempY1 = o.getY() - cy;
+		float tempX2 = o.getX() + o.getWidth() - cx;
+		float tempY2 = o.getY() - cy;
+		float tempX3 = o.getX() + o.getWidth() - cx;
+		float tempY3 = o.getY() + o.getHeight() - cy;
+		float tempX4 = o.getX() - cx;
+		float tempY4 = o.getY() + o.getHeight() - cy;
+		
+		/*  now apply rotation formula for each point
+		 * 
+		 * 	x[n] = x[n] * cos(theta) - y[n] * sin(theta)
+		 * 	y[n] = x[n] * sin(theta) + y[n] * cos(theta)
+		 */
+		float rotatedX1 = (float) (tempX1*Math.cos(theta) - tempY1*Math.sin(theta));
+		float rotatedY1 = (float) (tempX1*Math.sin(theta) + tempY1*Math.cos(theta));
 
-		
-		
-		float x3 = (float) (rectX3 * Math.cos((rotation * 3.149) / 180) - (rectY3 * Math
-				.sin((rotation * 3.149) / 180)));
-		float y3 = (float) (rectY3 * Math.cos((rotation * 3.149) / 180) + (rectX3 * Math
-				.sin((rotation * 3.149) / 180)));
-		
-		float x4 = (float) (rectX4 * Math.cos((rotation * 3.149) / 180) - (rectY4 * Math
-				.sin((rotation * 3.149) / 180)));
-		float y4 = (float) (rectY4 * Math.cos((rotation * 3.149) / 180) + (rectX4 * Math
-				.sin((rotation * 3.149) / 180)));
+		float rotatedX2 = (float) (tempX2*Math.cos(theta) - tempY2*Math.sin(theta));
+		float rotatedY2 = (float) (tempX2*Math.sin(theta) + tempY2*Math.cos(theta));
 
+		float rotatedX3 = (float) (tempX3*Math.cos(theta) - tempY3*Math.sin(theta));
+		float rotatedY3 = (float) (tempX3*Math.sin(theta) + tempY3*Math.cos(theta));
 		
-		drawQuad(x1, y1, 100, 10);
-		drawQuad(x2, y2, 100, 10);
-		//drawQuad(x3, y3, 100, 10);
-		//drawQuad(x4, y4, 100, 10);
+		float rotatedX4 = (float) (tempX4*Math.cos(theta) - tempY4*Math.sin(theta));
+		float rotatedY4 = (float) (tempX4*Math.sin(theta) + tempY4*Math.cos(theta));
+		
+		
+		// translate back
+		float x1 = rotatedX1 + cx;
+		float y1 = rotatedY1 + cy;
+		
+		float x2 = rotatedX2 + cx;
+		float y2 = rotatedY2 + cy;
+		
+		float x3 = rotatedX3 + cx;
+		float y3 = rotatedY3 + cy;
+		
+		float x4 = rotatedX4 + cx;
+		float y4 = rotatedY4 + cy;
+		////
+
+		drawQuad(x1,y1,1000,10);
+		drawQuad(x2,y2,1000,10);
+		drawQuad(x3,y3,1000,10);
+		drawQuad(x4,y4,2000,10);
+		
 		
 		rotatedCoords.put("x1", x1);
 		rotatedCoords.put("y1", y1);
@@ -111,6 +128,7 @@ public class Ball {
 		rotatedCoords.put("y3", y3);
 		rotatedCoords.put("x4", x4);
 		rotatedCoords.put("y4", y4);
+		
 		
 		return rotatedCoords;
 	}
@@ -130,7 +148,7 @@ public class Ball {
 		boolean isOnRight = (Boolean) (x <= (o.getX() + o.getWidth() + radius) ? x >= (o.getX() + o.getWidth() - 20):false);
 		
 		
-		if(o.getRotation() > 0){
+		if(o.getRotation() != 0){
 			
 			
 			HashMap<String, Float> coordsCopy = calculateRotatedCoords();
@@ -140,17 +158,15 @@ public class Ball {
 			float x2 = coordsCopy.get("x2");
 			float y2 = coordsCopy.get("y2");
 			
-			//drawQuad(o.getX(), o.getY(), 100, 10);
-			//drawQuad(o.getX() + o.getWidth(), o.getY(), 100, 10);
-			
-			System.out.println("x: " + o.getX() + ",y: " + o.getY());
-			
 			if(isBetween(x1,y1,x2,y2,x,y)){
-				y = 200;
+				y -= 10;
 				
+				if(o.getRotation() >0 && o.getRotation() < 90){
+					x += 1;	
+				}else if(o.getRotation() <0 && o.getRotation() > -90){
+					x -= 1;	
+				}
 			}
-			//System.out.println(isBetween(x1,y1,x2,y2,x,y));
-			
 			
 		}else{
 		
@@ -182,7 +198,7 @@ public class Ball {
 	public boolean isBetween(float ax,float ay,float bx,float by,float cx,float cy){
 		//System.out.println("distance(ax,cx,ay,cy) " + distance(ax,cx,ay,cy) + ",distance(cx,bx,cy,by) " + distance(cx,bx,cy,by) + " == distance(ax,bx,cy,by)" + distance(ax,bx,cy,by) + ",total = " + (distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)));
 		
-		if((distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)) - distance(ax,bx,cy,by) <= 20){
+		if((distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)) - distance(ax,bx,cy,by) <= 60){
 			interX = 0;
 			interY = 0;
 			return true;
