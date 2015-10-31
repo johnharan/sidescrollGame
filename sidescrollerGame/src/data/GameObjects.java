@@ -17,8 +17,8 @@ public class GameObjects {
 		foreground = new Foreground();
 		
 		SolidGround large = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,Display.getHeight()-512,1024,512,0.0f);
-		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1300,100,1024,512,10f);
-		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1200,1000,1024,512,0.0f);
+		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1250,50,1024,512,20f);
+		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1100,1000,1024,512,0.0f);
 		SolidGround large4 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,2000,1024,512,0.0f);
 		SolidGround large5 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1300,3000,1024,512,0.0f);
 		SolidGround large6 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,4000,1024,512,0.0f);
@@ -29,7 +29,7 @@ public class GameObjects {
 		foreground.addElement(large4);
 		foreground.addElement(large5);
 		foreground.addElement(large6);
-		System.out.println("x: " + foreground.getForegroundElements().get(1).getX() + ",y: " + foreground.getForegroundElements().get(1).getY());
+		//System.out.println("x: " + foreground.getForegroundElements().get(1).getX() + ",y: " + foreground.getForegroundElements().get(1).getY());
 		
 	}
 	

@@ -37,10 +37,8 @@ public class Ball {
 		float startY = GameObjects.getStartY();
 		float changeY = startY - y;
 		
-		// note: need to adjust rotated items differently (need to use new x and y)
-		
 		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
-			o.setY(o.getY() + changeY/3);
+			o.setY(o.getY() + changeY/2);
 		}
 		
 	}
@@ -66,36 +64,29 @@ public class Ball {
 		
 		Foreground o = getClosestObject();
 		float rotation = o.getRotation();
-		float rectX1 = GameObjects.getForeground().getForegroundElements()
-				.get(1).getX(), rectY1 = GameObjects.getForeground()
-				.getForegroundElements().get(1).getY();
-		float rectX2 = GameObjects.getForeground().getForegroundElements()
-				.get(1).getX()
-				+ GameObjects.getForeground().getForegroundElements()
-						.get(1).getWidth(), rectY2 = GameObjects
-				.getForeground().getForegroundElements().get(1).getY();
-		float rectX3 = GameObjects.getForeground().getForegroundElements()
-				.get(1).getX()
-				+ GameObjects.getForeground().getForegroundElements()
-						.get(1).getWidth(), rectY3 = GameObjects.getForeground()
-				.getForegroundElements().get(1).getY() + GameObjects.getForeground()
-				.getForegroundElements().get(1).getHeight();
-		float rectX4 = GameObjects.getForeground().getForegroundElements()
-				.get(1).getX(), rectY4 = GameObjects
-				.getForeground().getForegroundElements().get(1).getY() + GameObjects.getForeground()
-				.getForegroundElements().get(1).getHeight();
+		float rectX1 = o.getX(), rectY1 = o.getY();
+		float rectX2 = o.getX() + o.getWidth(), rectY2 = o.getY();
+		float rectX3 = o.getX() + o.getWidth(), rectY3 = o.getY() + o.getHeight();
+		float rectX4 = o.getX(), rectY4 = o.getY() + o.getHeight();
 
 		// below calculates new x and y values (after rotation)
-		float x1 = (float) (rectX1 * Math.cos((rotation * 3.149) / 180) - (rectY1 * Math
+		float x1 = (float) (rectX1 * Math.cos((rotation * 3.149) / 180) + (rectY1 * Math
 				.sin((rotation * 3.149) / 180)));
-		float y1 = (float) (rectY1 * Math.cos((rotation * 3.149) / 180) + (rectX1 * Math
-				.sin((rotation * 3.149) / 180)));
+		float y1 = (float) (-rectX1 * Math.sin((rotation * 3.149) / 180) + (rectY1 * Math
+				.cos((rotation * 3.149) / 180)));
 
-		float x2 = (float) (rectX2 * Math.cos((rotation * 3.149) / 180) - (rectY2 * Math
+		
+		float x2 = (float) (rectX2 * Math.cos((rotation * 3.149) / 180) + (rectY2 * Math
 				.sin((rotation * 3.149) / 180)));
-		float y2 = (float) (rectY2 * Math.cos((rotation * 3.149) / 180) + (rectX2 * Math
-				.sin((rotation * 3.149) / 180)));
+		float y2 = (float) (-rectX2 * Math.sin((rotation * 3.149) / 180) + (rectY2 * Math
+				.cos((rotation * 3.149) / 180)));
+		//float x2 = (float) (rectX2 * Math.cos((rotation * 3.149) / 180) - (rectY2 * Math
+		//		.sin((rotation * 3.149) / 180)));
+		//float y2 = (float) (rectY2 * Math.cos((rotation * 3.149) / 180) + (rectX2 * Math
+		//		.sin((rotation * 3.149) / 180)));
 
+		
+		
 		float x3 = (float) (rectX3 * Math.cos((rotation * 3.149) / 180) - (rectY3 * Math
 				.sin((rotation * 3.149) / 180)));
 		float y3 = (float) (rectY3 * Math.cos((rotation * 3.149) / 180) + (rectX3 * Math
@@ -106,6 +97,12 @@ public class Ball {
 		float y4 = (float) (rectY4 * Math.cos((rotation * 3.149) / 180) + (rectX4 * Math
 				.sin((rotation * 3.149) / 180)));
 
+		
+		drawQuad(x1, y1, 100, 10);
+		drawQuad(x2, y2, 100, 10);
+		//drawQuad(x3, y3, 100, 10);
+		//drawQuad(x4, y4, 100, 10);
+		
 		rotatedCoords.put("x1", x1);
 		rotatedCoords.put("y1", y1);
 		rotatedCoords.put("x2", x2);
@@ -135,16 +132,18 @@ public class Ball {
 		
 		if(o.getRotation() > 0){
 			
-			//drawQuad(x1, y1, 100, 10);
-			//drawQuad(x2, y2, 100, 10);
-			//drawQuad(x3, y3, 100, 10);
-			//drawQuad(x4, y4, 100, 10);
+			
 			HashMap<String, Float> coordsCopy = calculateRotatedCoords();
 			
 			float x1 = coordsCopy.get("x1");
 			float y1 = coordsCopy.get("y1");
 			float x2 = coordsCopy.get("x2");
 			float y2 = coordsCopy.get("y2");
+			
+			//drawQuad(o.getX(), o.getY(), 100, 10);
+			//drawQuad(o.getX() + o.getWidth(), o.getY(), 100, 10);
+			
+			System.out.println("x: " + o.getX() + ",y: " + o.getY());
 			
 			if(isBetween(x1,y1,x2,y2,x,y)){
 				y = 200;
