@@ -4,6 +4,9 @@ import static helpers.Artist.drawCircle;
 
 import java.util.HashMap;
 
+import org.lwjgl.util.vector.Vector;
+import org.lwjgl.util.vector.Vector2f;
+
 import stateManager.States;
 import static helpers.Artist.*;
 import Foreground.Foreground;
@@ -45,9 +48,8 @@ public class Ball {
 	
 	public void updateBall(){
 		if(isBallAlive() == true){
-			if(isBallOnSurface() == false){
-				gravity();
-			}
+			gravity();
+			
 			adjustCameraY();
 			collisionDetection();
 		}else{
@@ -57,6 +59,67 @@ public class Ball {
 	
 	public void drawBall(){
 		drawCircle(x, y, radius, sides);
+	}
+	
+	public void closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c){
+		// below is from tutorial http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html
+		Vector2f line_v = new Vector2f();
+		Vector2f unit_line_v = new Vector2f();
+		Vector2f pt_v = new Vector2f(); // distCtoP1
+		Vector2f closest = new Vector2f();
+		Vector2f dist_v = new Vector2f();
+		Vector2f unit_dist_v = new Vector2f();
+		
+		float length_proj_v = 0; // scalar (real number)
+		float length_line_v = 0;
+		float length_dist_v = 0;
+
+		
+		Vector2f.sub(p2, p1, line_v);
+		Vector2f.sub(c, p1, pt_v);
+		
+		//System.out.println("p1: " + p1 + ",normalise: " + p1.normalise() + ",length: " + p1.length());
+		
+		line_v.normalise(unit_line_v); // normalise line_v and store result in unit_line_v
+		
+		length_proj_v = Vector2f.dot(pt_v, unit_line_v); // ||proj_v|| = pt_v . unit_line_v
+		length_line_v = line_v.length(); // |line_v|
+		
+		//System.out.println("|proj_v| = " + length_proj_v);
+		
+		if(length_proj_v < 0){
+			closest = p1;
+		}
+		if(length_proj_v > length_line_v){
+			closest = p2;
+		}
+		
+		// proj_v = ||line_v|| x |proj_v|  
+		float proj_v_x = unit_line_v.getX() * length_proj_v;
+		float proj_v_y = unit_line_v.getY() * length_proj_v;
+		
+		Vector2f proj_v = new Vector2f(proj_v_x,proj_v_y);
+		
+		//System.out.println("unit_line_v: "+ unit_line_v + ",length_proj_v: " + length_proj_v + ",proj_v: " + proj_v);
+		Vector2f.add(p1, proj_v, closest);
+		
+		Vector2f.sub(c, closest, dist_v);
+		length_dist_v = dist_v.length();
+		
+		dist_v.normalise(unit_dist_v);
+		
+		float offset_x = unit_dist_v.getX() * (radius - length_dist_v);
+		float offset_y = unit_dist_v.getY() * (radius - length_dist_v);
+		
+		Vector2f offset = new Vector2f(offset_x,offset_y);
+		
+		if(length_dist_v < radius){
+			y += offset.getY();
+			x += offset.getX();
+		}else{
+			//not intersecting
+		}
+		
 	}
 	
 	public HashMap<String,Float> calculateRotatedCoords(){
@@ -158,8 +221,19 @@ public class Ball {
 			float x2 = coordsCopy.get("x2");
 			float y2 = coordsCopy.get("y2");
 			
+			drawLine(x1,y1,x2,y2);
+			
+			Vector2f p1 = new Vector2f(x1,y1);
+			Vector2f p2 = new Vector2f(x2,y2);
+			Vector2f c = new Vector2f(x,y);
+			
+			//System.out.println("p1: " + p1 + ",p2: " + p2 + ",p1.p2: " + Vector2f.dot(p1, p2));
+			
+			closestPointOnLine(p1,p2,c);
+			
+			/*
 			if(isBetween(x1,y1,x2,y2,x,y)){
-				y -= 10;
+				y -= 0.5f * Clock.getDelta();
 				
 				if(o.getRotation() >0 && o.getRotation() < 90){
 					x += 1;	
@@ -167,6 +241,7 @@ public class Ball {
 					x -= 1;	
 				}
 			}
+			*/
 			
 		}else{
 		
@@ -198,7 +273,10 @@ public class Ball {
 	public boolean isBetween(float ax,float ay,float bx,float by,float cx,float cy){
 		//System.out.println("distance(ax,cx,ay,cy) " + distance(ax,cx,ay,cy) + ",distance(cx,bx,cy,by) " + distance(cx,bx,cy,by) + " == distance(ax,bx,cy,by)" + distance(ax,bx,cy,by) + ",total = " + (distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)));
 		
-		if((distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)) - distance(ax,bx,cy,by) <= 60){
+		
+		if((distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)) - distance(ax,bx,cy,by) <= 20){
+			//drawQuad(cx,cy,1000,10,40.0f);
+			y = 100;
 			interX = 0;
 			interY = 0;
 			return true;

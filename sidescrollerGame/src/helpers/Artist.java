@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
+import static org.lwjgl.opengl.GL11.GL_LINES;
 
 
 
@@ -52,7 +53,28 @@ public class Artist {
 			
 	}
 	
+	public static void drawLine(float x1, float y1, float x2, float y2){
+		glBegin(GL_LINES);
+		glVertex2f(x1,y1-20);
+		glVertex2f(x2,y2-20);
+		
+		glEnd();
+	}
+	
 	public static void drawQuad(float x, float y, float width, float height){
+		glBegin(GL_QUADS);
+		glVertex2f(x,y);
+		glVertex2f(x + width,y);
+		glVertex2f(x + width,y + height);
+		glVertex2f(x,y + height);
+		
+		glEnd();
+	}
+	
+	public static void drawQuad(float x, float y, float width, float height, float rotation){
+		GL11.glTranslatef((x+(width/2)),(y+(height/2)),0.0f);
+		GL11.glRotatef(rotation,0.0f,0.0f,1.0f);
+		GL11.glTranslatef(-(x+(width/2)),-(y+(height/2)),0.0f);
 		glBegin(GL_QUADS);
 		glVertex2f(x,y);
 		glVertex2f(x + width,y);

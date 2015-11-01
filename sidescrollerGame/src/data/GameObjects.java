@@ -13,12 +13,12 @@ public class GameObjects {
 	private static float startY = 498f;
 	
 	public static void loadGameObjects(){
-		ball = new Ball(700,startY,70,40);
+		ball = new Ball(400,startY,70,40);
 		foreground = new Foreground();
 		
 		SolidGround large = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,Display.getHeight()-512,1024,512,0.0f);
-		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1250,500,1024,512,10f);
-		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1100,1500,1024,512,0.0f);
+		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1200,700,1024,512,10f);
+		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1100,1700,1024,512,0.0f);
 		SolidGround large4 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,2000,1024,512,0.0f);
 		SolidGround large5 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1300,3000,1024,512,0.0f);
 		SolidGround large6 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,4000,1024,512,0.0f);
