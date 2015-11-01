@@ -2,8 +2,10 @@ package data;
 
 import static helpers.Artist.drawCircle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -61,7 +63,7 @@ public class Ball {
 		drawCircle(x, y, radius, sides);
 	}
 	
-	public void closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c){
+	public ArrayList<Object> closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c){
 		// below is from tutorial http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html
 		Vector2f line_v = new Vector2f();
 		Vector2f unit_line_v = new Vector2f();
@@ -113,13 +115,19 @@ public class Ball {
 		
 		Vector2f offset = new Vector2f(offset_x,offset_y);
 		
+		/*
 		if(length_dist_v < radius){
 			y += offset.getY();
-			x += offset.getX();
+			//x += offset.getX();
 		}else{
 			//not intersecting
 		}
+		*/
+		ArrayList<Object> result = new ArrayList<Object>();
+		result.add(length_dist_v);
+		result.add(offset);
 		
+		return result;
 	}
 	
 	public HashMap<String,Float> calculateRotatedCoords(){
@@ -177,11 +185,7 @@ public class Ball {
 		float y4 = rotatedY4 + cy;
 		////
 
-		drawQuad(x1,y1,1000,10);
-		drawQuad(x2,y2,1000,10);
-		drawQuad(x3,y3,1000,10);
-		drawQuad(x4,y4,2000,10);
-		
+
 		
 		rotatedCoords.put("x1", x1);
 		rotatedCoords.put("y1", y1);
@@ -196,6 +200,31 @@ public class Ball {
 		return rotatedCoords;
 	}
 	
+	public boolean isRotatedObjectColliding(){
+
+		HashMap<String, Float> rotatedCoords = calculateRotatedCoords();
+		
+		float x1 = rotatedCoords.get("x1");
+		float y1 = rotatedCoords.get("y1");
+		float x2 = rotatedCoords.get("x2");
+		float y2 = rotatedCoords.get("y2");
+		
+		Vector2f p1 = new Vector2f(x1,y1);
+		Vector2f p2 = new Vector2f(x2,y2);
+		Vector2f c = new Vector2f(x,y);
+		
+
+		ArrayList<Object> result = closestPointOnLine(p1,p2,c); // closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c)
+		
+		float length_dist_v = (Float) result.get(0);
+		
+		if(length_dist_v < radius){
+			return true;
+		}
+		return false;
+		
+	}
+	
 	public void collisionDetection(){
 		
 		if(x <= GameObjects.getForeground().getForegroundElements().get(0).getX() + radius){ // if ball is at far left of first ground element
@@ -203,47 +232,60 @@ public class Ball {
 		}
 		
 		Foreground o = getClosestObject(); // gets nearest foreground element to ball
-		boolean isInsideLeftAndRight = (Boolean) (x >= o.getX() - halfRadius ? x <= (o.getX() + o.getWidth() + halfRadius):false);
-		boolean isOnTop = (Boolean) (y >= o.getY() - radius ? y <= (o.getY() - radius + 100):false);
-		boolean isOnBottom = (Boolean) (y <= (o.getY() + o.getHeight() + radius) ? y >= (o.getY() + o.getHeight() - 20):false);
-		boolean isInsideTopAndBottom = (Boolean) (y >= o.getY() - halfRadius ? y <= (o.getY() + o.getHeight() + halfRadius):false);
-		boolean isOnLeft = (Boolean) (x >= o.getX() - radius ? x <= (o.getX() + 20):false);
-		boolean isOnRight = (Boolean) (x <= (o.getX() + o.getWidth() + radius) ? x >= (o.getX() + o.getWidth() - 20):false);
-		
 		
 		if(o.getRotation() != 0){
 			
+			HashMap<String, Float> rotatedCoords = calculateRotatedCoords();
 			
-			HashMap<String, Float> coordsCopy = calculateRotatedCoords();
+			float x1 = rotatedCoords.get("x1");
+			float y1 = rotatedCoords.get("y1");
+			float x2 = rotatedCoords.get("x2");
+			float y2 = rotatedCoords.get("y2");
 			
-			float x1 = coordsCopy.get("x1");
-			float y1 = coordsCopy.get("y1");
-			float x2 = coordsCopy.get("x2");
-			float y2 = coordsCopy.get("y2");
-			
-			drawLine(x1,y1,x2,y2);
-			
-			Vector2f p1 = new Vector2f(x1,y1);
-			Vector2f p2 = new Vector2f(x2,y2);
-			Vector2f c = new Vector2f(x,y);
-			
-			//System.out.println("p1: " + p1 + ",p2: " + p2 + ",p1.p2: " + Vector2f.dot(p1, p2));
-			
-			closestPointOnLine(p1,p2,c);
-			
-			/*
-			if(isBetween(x1,y1,x2,y2,x,y)){
-				y -= 0.5f * Clock.getDelta();
-				
-				if(o.getRotation() >0 && o.getRotation() < 90){
-					x += 1;	
-				}else if(o.getRotation() <0 && o.getRotation() > -90){
-					x -= 1;	
+			if(x < x1 - halfRadius|| x > x2 + halfRadius){ // don't need to check outside line
+					
+			}else{
+
+				float x3 = rotatedCoords.get("x3");
+				float y3 = rotatedCoords.get("y3");
+				float x4 = rotatedCoords.get("x4");
+				float y4 = rotatedCoords.get("y4");
+
+				Vector2f c = new Vector2f(x, y);
+				Vector2f p1 = new Vector2f(x1, y1);
+				Vector2f p2 = new Vector2f(x2, y2);
+
+				Vector2f p3 = new Vector2f(x3, y3);
+				Vector2f p4 = new Vector2f(x4, y4);
+
+				ArrayList<Object> linep1p2 = closestPointOnLine(p1, p2, c); // closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c)
+				ArrayList<Object> linep1p4 = closestPointOnLine(p1, p4, c);
+
+				float dist_top_to_ball = (Float) linep1p2.get(0);
+				Vector2f offset1 = (Vector2f) linep1p2.get(1);
+
+				float dist_left_to_ball = (Float) linep1p4.get(0);
+				Vector2f offset2 = (Vector2f) linep1p4.get(1);
+
+				if (dist_top_to_ball < radius) {
+					y += offset1.getY();
+					if(o.getRotation() <0){ // if rotation is negative, need negative slope
+						x -= offset1.getX() * o.getRotation() / 100;
+					}else{
+						x += offset1.getX() * o.getRotation() / 100;
+					}
 				}
+				
+
 			}
-			*/
-			
 		}else{
+			boolean isInsideLeftAndRight = (Boolean) (x >= o.getX() - halfRadius ? x <= (o.getX() + o.getWidth() + halfRadius):false);
+			boolean isOnTop = (Boolean) (y >= o.getY() - radius ? y <= (o.getY() - radius + 100):false);
+			boolean isOnBottom = (Boolean) (y <= (o.getY() + o.getHeight() + radius) ? y >= (o.getY() + o.getHeight() - 20):false);
+			boolean isInsideTopAndBottom = (Boolean) (y >= o.getY() - halfRadius ? y <= (o.getY() + o.getHeight() + halfRadius):false);
+			boolean isOnLeft = (Boolean) (x >= o.getX() - radius ? x <= (o.getX() + 20):false);
+			boolean isOnRight = (Boolean) (x <= (o.getX() + o.getWidth() + radius) ? x >= (o.getX() + o.getWidth() - 20):false);
+			
 		
 			// top of element
 			if (isOnTop && isInsideLeftAndRight) { // stops ball at top/surface of an element
@@ -286,6 +328,11 @@ public class Ball {
 	
 	public boolean isBallOnSurface(){
 		Foreground o = getClosestObject();
+		
+		if(o.getRotation() != 0){ // if item is rotated, need to run below collision check
+			return isRotatedObjectColliding();
+		}
+		
 		boolean isOnTop = (Boolean) (y >= o.getY() - radius ? y <= (o.getY() - radius + 20):false);
 		boolean isInsideLeftAndRight = (Boolean) (x >= o.getX() - halfRadius ? x <= (o.getX() + o.getWidth() + halfRadius):false);
 		

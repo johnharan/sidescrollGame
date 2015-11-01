@@ -33,7 +33,7 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)){
 			if(GameObjects.getBall().getX() <= 200 && isBallAtStart()){
 				for(Foreground o: GameObjects.getForeground().getForegroundElements()){
-					o.setX(o.getX() + 0.7f * Clock.getDelta());
+					o.setX(o.getX() + 0.9f * Clock.getDelta());
 				}
 			}else{
 				GameObjects.getBall().setX(GameObjects.getBall().getX() - 1 * Clock.getDelta());
@@ -42,7 +42,7 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){
 			if(GameObjects.getBall().getX() >= Display.getWidth() - 800){
 				for(Foreground o: GameObjects.getForeground().getForegroundElements()){
-					o.setX(o.getX() - 0.7f * Clock.getDelta());
+					o.setX(o.getX() - 0.9f * Clock.getDelta());
 				}
 			}else{
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + 1 * Clock.getDelta());

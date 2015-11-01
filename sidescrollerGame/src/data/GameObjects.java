@@ -10,18 +10,18 @@ import Foreground.SolidGround;
 public class GameObjects {
 	private static Ball ball;
 	private static Foreground foreground;
-	private static float startY = 498f;
+	private static float startY = 498f, startX = 400;
 	
 	public static void loadGameObjects(){
-		ball = new Ball(400,startY,70,40);
+		ball = new Ball(startX,startY,70,40);
 		foreground = new Foreground();
 		
 		SolidGround large = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,Display.getHeight()-512,1024,512,0.0f);
-		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1200,700,1024,512,10f);
-		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1100,1700,1024,512,0.0f);
-		SolidGround large4 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,2000,1024,512,0.0f);
-		SolidGround large5 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1300,3000,1024,512,0.0f);
-		SolidGround large6 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,4000,1024,512,0.0f);
+		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 700,1000,1024,100,60f);
+		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1200,1800,1024,100,40.0f);
+		SolidGround large4 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1700,2500,1024,512,-40.0f);
+		SolidGround large5 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1100,3200,1024,512,0.0f);
+		SolidGround large6 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,3000,1024,512,0.0f);
 		// texture width/height must be multiple of 16
 		foreground.addElement(large);
 		foreground.addElement(large2);
@@ -33,6 +33,10 @@ public class GameObjects {
 		
 	}
 	
+	public static float getStartX() {
+		return startX;
+	}
+
 	public static float getStartY() {
 		return startY;
 	}
