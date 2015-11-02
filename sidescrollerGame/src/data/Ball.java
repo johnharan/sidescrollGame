@@ -5,6 +5,7 @@ import static helpers.Artist.drawCircle;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector2f;
@@ -14,7 +15,7 @@ import static helpers.Artist.*;
 import Foreground.Foreground;
 
 public class Ball {
-	private float x, y, radius, halfRadius, interX, interY;
+	private float x, y, radius, halfRadius, velocity;
 	private int sides;
 
 	public Ball(float x, float y, float radius, int sides){
@@ -38,6 +39,8 @@ public class Ball {
 		return false;
 	}
 	
+	
+	
 	public void adjustCameraY(){
 		float startY = GameObjects.getStartY();
 		float changeY = startY - y;
@@ -45,13 +48,33 @@ public class Ball {
 		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
 			o.setY(o.getY() + changeY/4);
 		}
+	}
+	
+	public void calculateVelocity(){
 		
+		if (Thread.activeCount() <= 10) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
+			Thread timedMissAdjustment = new Thread(new Runnable() {
+				float lastx = 0;
+				public void run() {
+					try {
+						lastx = x;
+						Thread.sleep(2000); // wait 2 seconds
+						velocity = (x - lastx)/2000;
+						//System.out.println(velocity);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			timedMissAdjustment.start();
+		}
 	}
 	
 	public void updateBall(){
 		if(isBallAlive() == true){
 			gravity();
-			
+			//calculateVelocity(); // move camerax at rate proportional to velocity of ball x
+			//System.out.println(velocity);
 			adjustCameraY();
 			collisionDetection();
 		}else{
@@ -59,6 +82,7 @@ public class Ball {
 		}
 	}
 	
+
 	public void drawBall(){
 		drawCircle(x, y, radius, sides);
 	}
@@ -218,11 +242,36 @@ public class Ball {
 		
 		float length_dist_v = (Float) result.get(0);
 		
-		if(length_dist_v < radius){
+		if(length_dist_v < radius + 10){ // adding + 1 is a tweak to ensure ball can jump
 			return true;
 		}
 		return false;
 		
+	}
+	
+	public Vector2f getOffset(){
+		Vector2f offset = new Vector2f(0,0);
+		Foreground o = getClosestObject(); // gets nearest foreground element to ball
+		
+		if(o.getRotation() != 0){
+		
+			HashMap<String, Float> rotatedCoords = calculateRotatedCoords();
+
+			float x1 = rotatedCoords.get("x1");
+			float y1 = rotatedCoords.get("y1");
+			float x2 = rotatedCoords.get("x2");
+			float y2 = rotatedCoords.get("y2");
+
+			Vector2f c = new Vector2f(x, y);
+			Vector2f p1 = new Vector2f(x1, y1);
+			Vector2f p2 = new Vector2f(x2, y2);
+
+			offset = (Vector2f) closestPointOnLine(p1, p2, c).get(1);
+			
+			return offset;
+		}
+		
+		return offset;
 	}
 	
 	public void collisionDetection(){
@@ -269,16 +318,22 @@ public class Ball {
 
 				if (dist_top_to_ball < radius) {
 					y += offset1.getY();
-					if(o.getRotation() <0){ // if rotation is negative, need negative slope
-						x -= offset1.getX() * o.getRotation() / 100;
-					}else{
-						x += offset1.getX() * o.getRotation() / 100;
+					
+					if(!(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && !(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D))){
+						x += offset1.getX();
+					}else if(x <= Display.getWidth() - 400){
+						x += offset1.getX();
 					}
+					
+					System.out.println("x: " + x + ",x + offset: " + (x+offset1.getX()));
+					
+					
+				
 				}
 				
 
 			}
-		}else{
+		}else{ // for non rotated object collision
 			boolean isInsideLeftAndRight = (Boolean) (x >= o.getX() - halfRadius ? x <= (o.getX() + o.getWidth() + halfRadius):false);
 			boolean isOnTop = (Boolean) (y >= o.getY() - radius ? y <= (o.getY() - radius + 100):false);
 			boolean isOnBottom = (Boolean) (y <= (o.getY() + o.getHeight() + radius) ? y >= (o.getY() + o.getHeight() - 20):false);
@@ -308,23 +363,6 @@ public class Ball {
 		}
 	}
 
-	public float distance(float x1,float x2,float y1,float y2){ // distance between two points
-		return (float) Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
-	}
-	
-	public boolean isBetween(float ax,float ay,float bx,float by,float cx,float cy){
-		//System.out.println("distance(ax,cx,ay,cy) " + distance(ax,cx,ay,cy) + ",distance(cx,bx,cy,by) " + distance(cx,bx,cy,by) + " == distance(ax,bx,cy,by)" + distance(ax,bx,cy,by) + ",total = " + (distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)));
-		
-		
-		if((distance(ax,cx,ay,cy) + distance(cx,bx,cy,by)) - distance(ax,bx,cy,by) <= 20){
-			//drawQuad(cx,cy,1000,10,40.0f);
-			y = 100;
-			interX = 0;
-			interY = 0;
-			return true;
-		}
-		return false;
-	}
 	
 	public boolean isBallOnSurface(){
 		Foreground o = getClosestObject();
@@ -404,6 +442,10 @@ public class Ball {
 	public void setX(float x) {
 		this.x = x;
 		
+	}
+	
+	public float getVelocity() {
+		return velocity;
 	}
 	
 }
