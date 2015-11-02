@@ -41,19 +41,14 @@ public class InputManager {
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){	
 			Foreground closest = GameObjects.getBall().getClosestObject();
-			if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding() && GameObjects.getBall().getX() >= Display.getWidth() - 400) {
-				if (closest.getRotation() < 0) {
-					float offset = GameObjects.getBall().getOffset().getX();
-					float offsety = GameObjects.getBall().getOffset().getY();
-					for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
-						o.setX(o.getX() - 0.7f * Clock.getDelta());
-						o.setX(o.getX() + offset);
-						o.setY(o.getY() - offsety * 2);
-						
-					}
-					//System.out.println("x: " + GameObjects.getBall().getX());
-				}
-					
+			if (closest.getRotation() < 0 && GameObjects.getBall().isRotatedObjectColliding() && GameObjects.getBall().getX() >= Display.getWidth() - 400) {
+				float offset = GameObjects.getBall().getOffset().getX();
+				float offsety = GameObjects.getBall().getOffset().getY();
+				for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
+					o.setX(o.getX() - 0.7f * Clock.getDelta());
+					o.setX(o.getX() + offset);
+					o.setY(o.getY() - offsety);
+				}		
 			}else{
 				if(GameObjects.getBall().getX() >= Display.getWidth() - 400){
 					for (Foreground o : GameObjects.getForeground()
