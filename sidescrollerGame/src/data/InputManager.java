@@ -42,12 +42,22 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){	
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			if (closest.getRotation() < 0 && GameObjects.getBall().isRotatedObjectColliding() && GameObjects.getBall().getX() >= Display.getWidth() - 400) {
-				float offset = GameObjects.getBall().getOffset().getX();
-				float offsety = GameObjects.getBall().getOffset().getY();
+				float normalised_rotation = (closest.getRotation() + 180)/(180 + 180);
+				System.out.println("normalised rotation: " + normalised_rotation);
+				float offsetX = GameObjects.getBall().getOffset().getX();
+				float offsetY = GameObjects.getBall().getOffset().getY();
+				float changeY = GameObjects.getBall().getChangeY() / 4;
 				for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
-					o.setX(o.getX() - 0.7f * Clock.getDelta());
-					o.setX(o.getX() + offset);
-					o.setY(o.getY() - offsety);
+					///////////////////////////////////////
+					// need to decay the 0.7f depending on rotation,
+					// so a normalised range between maybe 0.7 as max and ~0.1 is min
+					o.setX(o.getX() - 0.1f * Clock.getDelta()); 
+					//o.setY(o.getY() - 2.1f * Clock.getDelta()); 
+					///////////////////////////////////////
+					o.setX(o.getX() + offsetX/40);
+					System.out.println("offsetX: " + offsetX + ",offsetX / 40: " + offsetX/40);
+					//o.setY(o.getY() - offsetY);
+					//o.setY(o.getY() - changeY);
 				}		
 			}else{
 				if(GameObjects.getBall().getX() >= Display.getWidth() - 400){

@@ -4,6 +4,8 @@ import static helpers.Artist.drawCircle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -15,7 +17,11 @@ import static helpers.Artist.*;
 import Foreground.Foreground;
 
 public class Ball {
-	private float x, y, radius, halfRadius, velocity;
+	private float x, y, radius, halfRadius, velocity, changeY;
+	public float getChangeY() {
+		return changeY;
+	}
+
 	private int sides;
 
 	public Ball(float x, float y, float radius, int sides){
@@ -27,6 +33,9 @@ public class Ball {
 	}
 	
 	public void gravity(){
+		if(!isRotatedObjectColliding()){
+			//y += 0.5f * Clock.getDelta();
+		}
 		y += 0.5f * Clock.getDelta();
 	}
 	
@@ -43,11 +52,13 @@ public class Ball {
 	
 	public void adjustCameraY(){
 		float startY = GameObjects.getStartY();
-		float changeY = startY - y;
+		changeY = startY - y;
 		
 		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
+			System.out.println("y: " + y + ",changeY: " + changeY);
 			o.setY(o.getY() + changeY/4);
 		}
+	
 	}
 	
 	public void calculateVelocity(){
@@ -77,11 +88,18 @@ public class Ball {
 			//System.out.println(velocity);
 			adjustCameraY();
 			collisionDetection();
+			System.out.println(y);
+			System.out.println("x: " + GameObjects.getForeground().getForegroundElements().get(1).getX() + ",y: " + GameObjects.getForeground().getForegroundElements().get(1).getY());
+			
 		}else{
 			States.setState(States.GameStates.END);
 		}
 	}
 	
+
+	public float getRadius() {
+		return radius;
+	}
 
 	public void drawBall(){
 		drawCircle(x, y, radius, sides);
@@ -242,7 +260,7 @@ public class Ball {
 		
 		float length_dist_v = (Float) result.get(0);
 		
-		if(length_dist_v < radius + 10){ // adding + 1 is a tweak to ensure ball can jump
+		if(length_dist_v < radius + 1){ // adding + 1 is a tweak to ensure ball can jump
 			return true;
 		}
 		return false;
