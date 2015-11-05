@@ -55,7 +55,7 @@ public class Ball {
 		changeY = startY - y;
 		
 		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
-			System.out.println("y: " + y + ",changeY: " + changeY);
+			//System.out.println("y: " + y + ",changeY: " + changeY);
 			o.setY(o.getY() + changeY/4);
 		}
 	
@@ -88,8 +88,8 @@ public class Ball {
 			//System.out.println(velocity);
 			adjustCameraY();
 			collisionDetection();
-			System.out.println(y);
-			System.out.println("x: " + GameObjects.getForeground().getForegroundElements().get(1).getX() + ",y: " + GameObjects.getForeground().getForegroundElements().get(1).getY());
+			//System.out.println(y);
+			//System.out.println("x: " + GameObjects.getForeground().getForegroundElements().get(1).getX() + ",y: " + GameObjects.getForeground().getForegroundElements().get(1).getY());
 			
 		}else{
 			States.setState(States.GameStates.END);
@@ -335,13 +335,13 @@ public class Ball {
 				Vector2f offset2 = (Vector2f) linep1p4.get(1);
 
 				if (dist_top_to_ball < radius) {
+					
+					// might need to reverse the below x for example, and reverse the foreground x, if on a slope
+					//
 					y += offset1.getY();
 					
-					if(!(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && !(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D))){
-						x += offset1.getX();
-					}else if(x <= Display.getWidth() - 400){
-						x += offset1.getX();
-					}
+					x += offset1.getX();
+					
 					
 					System.out.println("x: " + x + ",x + offset: " + (x+offset1.getX()));
 					

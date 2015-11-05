@@ -10,7 +10,7 @@ import Foreground.SolidGround;
 public class GameObjects {
 	private static Ball ball;
 	private static Foreground foreground;
-	private static float startY = 498f, startX = 400;
+	private static float startY = 498f, startX = 500;
 	
 	public static void loadGameObjects(){
 		ball = new Ball(startX,startY,70,40);
@@ -40,7 +40,7 @@ public class GameObjects {
 		SolidGround large22 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 3474,Display.getHeight()-450,1024,512,0.0f);
 		SolidGround large23 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4498,Display.getHeight()-450,1024,512,0.0f);
 		SolidGround large24 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 5522,Display.getHeight()-450,1024,512,0.0f);
-		SolidGround large25 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4498,Display.getHeight()-1100,1024,512,-70.0f);
+		SolidGround large25 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4498,Display.getHeight()-1100,1024,512,-63.0f);
 		SolidGround large26 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4000,3650,1024,512,-20.0f);
 		// texture width/height must be multiple of 16
 		foreground.addElement(large);
