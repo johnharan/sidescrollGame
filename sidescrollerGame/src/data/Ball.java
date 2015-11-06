@@ -17,11 +17,7 @@ import static helpers.Artist.*;
 import Foreground.Foreground;
 
 public class Ball {
-	private float x, y, radius, halfRadius, velocity, changeY, changeX, ballSpeed, foregroundSpeed, distance, ballS = 0.0f, fgS = 0.7f, xoffset;
-	public float getChangeY() {
-		return changeY;
-	}
-
+	private float x, y, radius, halfRadius, changeY, xoffset;
 	private int sides;
 
 	public Ball(float x, float y, float radius, int sides){
@@ -33,9 +29,6 @@ public class Ball {
 	}
 	
 	public void gravity(){
-		if(!isRotatedObjectColliding()){
-			//y += 0.5f * Clock.getDelta();
-		}
 		y += 0.5f * Clock.getDelta();
 	}
 	
@@ -48,8 +41,7 @@ public class Ball {
 		return false;
 	}
 	
-	
-	
+		
 	public void adjustCameraY(){
 		float startY = GameObjects.getStartY();
 		changeY = startY - y;
@@ -58,71 +50,18 @@ public class Ball {
 			//System.out.println("y: " + y + ",changeY: " + changeY);
 			o.setY(o.getY() + changeY/4);
 		}
-	
-	}
-	
-	public void calculateVelocity(){
-		
-		if (Thread.activeCount() <= 10) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
-			Thread timedMissAdjustment = new Thread(new Runnable() {
-				float lastx = 0;
-				public void run() {
-					try {
-						lastx = x;
-						Thread.sleep(2000); // wait 2 seconds
-						velocity = (x - lastx)/2000;
-						//System.out.println(velocity);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			timedMissAdjustment.start();
-		}
 	}
 	
 	public void updateBall(){
 		if(isBallAlive() == true){
 			gravity();
-			//calculateVelocity(); // move camerax at rate proportional to velocity of ball x
-			//System.out.println(velocity);
-			adjustSpeedChange();
-			calcDistance();
 			adjustCameraY();
-			
 			collisionDetection();
-			//System.out.println(y);
-			//System.out.println("x: " + GameObjects.getForeground().getForegroundElements().get(1).getX() + ",y: " + GameObjects.getForeground().getForegroundElements().get(1).getY());
-			
 		}else{
 			States.setState(States.GameStates.END);
 		}
 	}
 	
-
-	public void adjustCameraX() {
-		float startX = GameObjects.getStartX();
-		changeX = startX - x;
-		
-		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
-			//System.out.println("y: " + y + ",changeY: " + changeY);
-			o.setX(o.getX() + changeX/1000);
-		}
-		
-	}
-
-	public float getBallSpeed() {
-		return ballSpeed;
-	}
-
-	public float getForegroundSpeed() {
-		return foregroundSpeed;
-	}
-
-	public float getRadius() {
-		return radius;
-	}
-
 	public void drawBall(){
 		drawCircle(x, y, radius, sides);
 	}
@@ -288,77 +227,7 @@ public class Ball {
 		return false;
 		
 	}
-	
-	public void calcDistance(){
-		distance = ((Display.getWidth() - 600) - x)/100;
-		
-		
-	}
-	
-	public float getDistance() {
-		return distance;
-	}
 
-
-	
-	public float getBallS() {
-		return ballS;
-	}
-
-	public void setBallS(float ballS) {
-		if(ballS >= 0.7f){
-			ballS = 0.7f;
-		}
-		if(ballS <= 0.0f){
-			ballS = 0.0f;
-		}
-		
-		this.ballS = ballS;
-	}
-
-	public float getFgS() {
-		return fgS;
-	}
-
-	public void setFgS(float fgS) {
-		if(fgS <= 0.0f){
-			fgS = 0.0f;
-		}
-		if(fgS >= 0.7f){
-			fgS = 0.7f;
-		}
-		
-		this.fgS = fgS;
-	}
-
-	public void adjustSpeedChange(){
-		
-		Foreground closest = GameObjects.getBall().getClosestObject();
-		float decay = 0.1f; // .1f after change of 20 in rotation, .2 after change of 40, .3 after 60
-		float rotation = closest.getRotation();
-		
-		if(rotation > -63.35 && rotation < 53.35){
-			 decay = .05f;
-		}else if(rotation > -53.35 && rotation < -43.35){
-			 decay = .1f;
-		}else if(rotation > -43.35 && rotation < -33.35){
-			 decay = .15f;
-		}else if(rotation > -33.35 && rotation < -23.35){
-			 decay = .2f;
-		}else if(rotation > -23.35 && rotation < -13.35){
-			 decay = .25f;
-		}else if(rotation > -13.35 && rotation < 0){
-			 decay = .3f;
-		}
-		// 0.7 / 63.35 = 0.011049724
-		float speedChange = -(rotation * 0.011049724f) -.01f;
-		
-				
-		ballSpeed = 0.0f + speedChange;
-		foregroundSpeed = 0.7f - speedChange;
-		//System.out.println(ballSpeed);
-		
-	}
 	
 	public Vector2f getOffset(){
 		Vector2f offset = new Vector2f(0,0);
@@ -428,11 +297,8 @@ public class Ball {
 				Vector2f offset2 = (Vector2f) linep1p4.get(1);
 
 				if (dist_top_to_ball < radius) {
-					
-					// might need to reverse the below x for example, and reverse the foreground x, if on a slope
-					//
-					y += offset1.getY();
-					
+
+					y += offset1.getY();					
 					x += offset1.getX();
 					
 					xoffset = offset1.getX();
@@ -475,10 +341,6 @@ public class Ball {
 		}
 	}
 
-	
-	public float getXoffset() {
-		return xoffset;
-	}
 
 	public boolean isBallOnSurface(){
 		Foreground o = getClosestObject();
@@ -542,6 +404,26 @@ public class Ball {
 		return closestObject;
 	}
 	
+	public Foreground getClosestRotatedObject(){
+		float centerX, centerY = 0;
+		double distance = 0;
+		double minDistance = Double.MAX_VALUE;
+		Foreground closestObject = null;
+		for(Foreground o: GameObjects.getForeground().getForegroundElements()){
+			if(o.getRotation() != 0){
+				centerX = o.getX() + (o.getWidth() / 2);
+				centerY = o.getY() + (o.getHeight() / 2);
+				distance = Math.sqrt(Math.pow(centerX - x, 2) + Math.pow(centerY - y, 2)); // use distance formula for two coordinate points
+
+				if(distance < minDistance){ // compare distances to find minimum distance
+					minDistance = distance;
+					closestObject = o;
+				}
+			}
+		}
+		return closestObject;
+	}
+	
 
 	public float getY() {
 		return y;
@@ -560,8 +442,16 @@ public class Ball {
 		
 	}
 	
-	public float getVelocity() {
-		return velocity;
+	public float getXoffset() {
+		return xoffset;
 	}
 	
+	public float getChangeY() {
+		return changeY;
+	}
+
+	public float getRadius() {
+		return radius;
+	}
+
 }

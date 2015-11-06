@@ -39,14 +39,19 @@ public class InputManager {
 			
 		}
 		*/
-		if(Keyboard.isKeyDown(Keyboard.KEY_F)){
-			GameObjects.getBall().setX(GameObjects.getBall().getX() + 18.2f);
-		}
+
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_G)){
 			for (Foreground o : GameObjects.getForeground()
 					.getForegroundElements()) {
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + 0.7f);
+			}
+		}
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_R)){
+			for (Foreground o : GameObjects.getForeground()
+					.getForegroundElements()) {
+				o.setX(o.getX() + 0.7f * Clock.getDelta()); // need to mix between this and below depending on slope size
 			}
 		}
 		
@@ -56,17 +61,14 @@ public class InputManager {
 			}
 		}
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_E)){
-			GameObjects.getBall().setX(GameObjects.getBall().getX() - 10f);
+		if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+			GameObjects.getBall().setX(GameObjects.getBall().getX() + 18f);
 		}
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_R)){
-			for (Foreground o : GameObjects.getForeground()
-					.getForegroundElements()) {
-				o.setX(o.getX() - 0.7f * Clock.getDelta()); // need to mix between this and below depending on slope size
-				GameObjects.getBall().setX(GameObjects.getBall().getX() + 0.0f);
-			}
+		if(Keyboard.isKeyDown(Keyboard.KEY_E)){
+			GameObjects.getBall().setX(GameObjects.getBall().getX() - 18f);
 		}
+		
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
@@ -104,6 +106,8 @@ public class InputManager {
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
+			Foreground closestRotated = GameObjects.getBall().getClosestRotatedObject();
+			System.out.println(closestRotated.getRotation());
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
@@ -117,8 +121,6 @@ public class InputManager {
 				}
 				System.out.println("x: " + GameObjects.getBall().getX() + ",delta: " + Clock.getDelta() + ",rotation: " + rotation);
 				
-			//}else if(closest.getRotation() <= -63.35f && GameObjects.getBall().isRotatedObjectColliding()){
-				// need code to do nothing (i.e. stop ball) if rotation if < -63.35, the point at which it can't move up
 			}else{
 				float x = GameObjects.getBall().getX();
 				float rightEdge = Display.getWidth() - 500;
