@@ -260,8 +260,15 @@ public class Ball {
 			x = GameObjects.getForeground().getForegroundElements().get(0).getX() + radius;
 		}
 		
+		// below is hard coded collision "wall"
+		// 25 is rotated object, 21 is surface before toated object
+		if(isBallOnSurface() && x >= GameObjects.getForeground().getForegroundElements().get(25).getX() + halfRadius + 20 && y >= GameObjects.getForeground().getForegroundElements().get(21).getY() - radius){ // if ball is at far left of first ground element
+			x = GameObjects.getForeground().getForegroundElements().get(25).getX() + halfRadius  + 20;
+		}
+
+
 		Foreground o = getClosestObject(); // gets nearest foreground element to ball
-		
+
 		if(o.getRotation() != 0){
 			
 			HashMap<String, Float> rotatedCoords = calculateRotatedCoords();
@@ -270,6 +277,10 @@ public class Ball {
 			float y1 = rotatedCoords.get("y1");
 			float x2 = rotatedCoords.get("x2");
 			float y2 = rotatedCoords.get("y2");
+			
+			//if(o.getRotation() <= -63.35f && x >= x1 - radius){ // if ball is at far left of first ground element
+			//	x = x1 - radius;
+			//}
 			
 			if(x < x1 - halfRadius|| x > x2 + halfRadius){ // don't need to check outside line
 					
@@ -304,12 +315,7 @@ public class Ball {
 					xoffset = offset1.getX();
 					
 					//System.out.println("x offset: " + offset1.getX() + ",y offset: " + offset1.getY());
-					
-					
-				
-				}
-				
-
+				}			
 			}
 		}else{ // for non rotated object collision
 			boolean isInsideLeftAndRight = (Boolean) (x >= o.getX() - halfRadius ? x <= (o.getX() + o.getWidth() + halfRadius):false);

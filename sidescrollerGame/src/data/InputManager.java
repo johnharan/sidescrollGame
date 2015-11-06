@@ -121,6 +121,9 @@ public class InputManager {
 				}
 				System.out.println("x: " + GameObjects.getBall().getX() + ",delta: " + Clock.getDelta() + ",rotation: " + rotation);
 				
+				// need to figure out how to stop ball if it reaches a wall
+			//}else if(GameObjects.getBall().getX() >= 4405){
+				
 			}else{
 				float x = GameObjects.getBall().getX();
 				float rightEdge = Display.getWidth() - 500;
