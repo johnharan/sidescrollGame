@@ -46,6 +46,7 @@ public class GameObjects {
 		SolidGround large27 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4000,3650,1024,512,-20.0f);
 		//SolidGround large28 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4440,Display.getHeight()-1035,1024,512,-62.0f);
 		SolidGround large28 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4370,Display.getHeight()-1105,1024,512,-70.0f);
+		SolidGround large29 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2870,Display.getHeight()-1105,1024,512,70.0f);
 		// texture width/height must be multiple of 16
 		foreground.addElement(large);
 		foreground.addElement(large2);
@@ -75,6 +76,7 @@ public class GameObjects {
 		foreground.addElement(large26);
 		foreground.addElement(large27);
 		foreground.addElement(large28);
+		foreground.addElement(large29);
 		//System.out.println("x: " + foreground.getForegroundElements().get(1).getX() + ",y: " + foreground.getForegroundElements().get(1).getY());
 		
 	}
