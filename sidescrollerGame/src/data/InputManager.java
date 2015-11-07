@@ -109,7 +109,10 @@ public class InputManager {
 			Foreground closestRotated = GameObjects.getBall().getClosestRotatedObject();
 			System.out.println(closestRotated.getRotation());
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
-			if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
+			
+		    if(GameObjects.getBall().isSteepSlope()){
+				// need to stop ball using x2,y2 of closest object (it is currently glitching between closest and closest rotated) 
+		    }else if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
 				float speed = -(xoffset / numberObjects);
 				System.out.println(xoffset);
@@ -122,8 +125,6 @@ public class InputManager {
 				System.out.println("x: " + GameObjects.getBall().getX() + ",delta: " + Clock.getDelta() + ",rotation: " + rotation);
 				
 				// need to figure out how to stop ball if it reaches a wall
-			//}else if(GameObjects.getBall().getX() >= 4405){
-				
 			}else{
 				float x = GameObjects.getBall().getX();
 				float rightEdge = Display.getWidth() - 500;
