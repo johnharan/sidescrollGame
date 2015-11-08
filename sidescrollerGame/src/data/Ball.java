@@ -17,7 +17,7 @@ import static helpers.Artist.*;
 import Foreground.Foreground;
 
 public class Ball {
-	private float x, y, radius, halfRadius, changeY, xoffset, velocity, rotatedX1, rotatedY1, rotatedX2, rotatedY2,rotation = 0, rotation2 = 90,rotation3 = 45,rotation4 = 135;
+	private float x, y, radius, halfRadius, changeY, xoffset, velocity, rotation = 0, rotation2 = 90,rotation3 = 45,rotation4 = 135;
 	private int sides;
 	private boolean steepSlope;
 	private float xoffsetSlope;
@@ -74,11 +74,10 @@ public class Ball {
 	}
 	
 	public void updateWheelRotation(){
-		rotation += velocity *10;
-		rotation2 += velocity * 10;
-		rotation3 += velocity *10;
-		rotation4 += velocity * 10;
-		
+		rotation += velocity *15;
+		rotation2 += velocity * 15;
+		rotation3 += velocity *15;
+		rotation4 += velocity * 15;	
 	}
 	
 	public void calculateVelocity(){
@@ -88,18 +87,21 @@ public class Ball {
 				float lastFGx = 0;
  				public void run() {
  					try {
- 						if(x <= (Display.getWidth() - 500) && x >= 400){
+ 						if((x > 400 && x < (Display.getWidth() - 500) && !GameObjects.getBall().isRotatedObjectColliding()) 
+ 							|| (GameObjects.getBall().isRotatedObjectColliding() 
+ 							&& !(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) 
+ 							&& !(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)))
+ 							|| (x < 400 && (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)) && !GameObjects.getBall().isRotatedObjectColliding())
+ 							|| (x > (Display.getWidth() - 500) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && !GameObjects.getBall().isRotatedObjectColliding())){
  							lastx = x;
  							Thread.sleep(20); // wait 20 milliseconds
- 							velocity = (x - lastx)/20;
- 							//System.out.println(velocity);
+ 							velocity = ((x - lastx)/20);
  						}else{
- 							System.out.println("in hereeeeeeeeeeeeeeeeeeeeeeeee");
  							float fgX = GameObjects.getBall().getClosestObject().getX();
+ 							System.out.println("fgX: " + fgX);
  							lastFGx = fgX;
  							Thread.sleep(20); // wait 20 milliseconds
- 							velocity = (fgX - lastFGx)/20;
- 							//System.out.println(velocity);
+ 							velocity = -(GameObjects.getBall().getClosestObject().getX() - lastFGx)/20;
  						}
  					}catch(InterruptedException e) {
 		 				e.printStackTrace();
@@ -110,27 +112,11 @@ public class Ball {
 		}
 	}
 	
-	public void drawSpokes(){
-		
+	public void drawSpokes(){	
 		drawThickLine(x+1,y+radius,x+1,y-radius,rotation);
 		drawThickLine(x,y+radius,x,y-radius,rotation2);
 		drawThickLine(x+1,y+radius,x+1,y-radius,rotation3);
 		drawThickLine(x,y+radius,x,y-radius,rotation4);
-
-		System.out.println("rotation: " + rotation);
-		if(rotation >= 180){
-			rotation = 0;
-		}
-		if(rotation2 >= 180){
-			rotation2 = 0;
-		}
-		if(rotation3 >= 180){
-			rotation3 = 0;
-		}
-		if(rotation4 >= 180){
-			rotation4 = 0;
-		}
-		
 	}
 	
 	public ArrayList<Object> closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c){

@@ -129,6 +129,7 @@ public class InputManager {
 				if(x >= rightEdge){
 					for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
 						o.setX(o.getX() - (0.7f) * Clock.getDelta());
+						
 					}
 				}else{
 					float ballSpeed = 0.7f * numberObjects;
