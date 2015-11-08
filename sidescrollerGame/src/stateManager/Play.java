@@ -12,6 +12,7 @@ public class Play implements GameStateInterface{
 
 	public void drawState() {
 		GameObjects.getBall().drawBall();
+		GameObjects.getBall().drawSpokes();
 		GameObjects.getForeground().draw();
 	}
 	

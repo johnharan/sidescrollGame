@@ -17,11 +17,12 @@ import static helpers.Artist.*;
 import Foreground.Foreground;
 
 public class Ball {
-	private float x, y, radius, halfRadius, changeY, xoffset, rotatedX1, rotatedY1, rotatedX2, rotatedY2;
+	private float x, y, radius, halfRadius, changeY, xoffset, velocity, rotatedX1, rotatedY1, rotatedX2, rotatedY2,rotation = 0, rotation2 = 90,rotation3 = 45,rotation4 = 135;
 	private int sides;
 	private boolean steepSlope;
 	private float xoffsetSlope;
 	private float yoffsetSlope;
+
 	
 	public Ball(float x, float y, float radius, int sides){
 		this.x = x;
@@ -60,6 +61,9 @@ public class Ball {
 			gravity();
 			adjustCameraY();
 			collisionDetection();
+			updateWheelRotation();
+			calculateVelocity();
+			System.out.println("velocity: " + velocity);
 		}else{
 			States.setState(States.GameStates.END);
 		}
@@ -67,6 +71,66 @@ public class Ball {
 	
 	public void drawBall(){
 		drawCircle(x, y, radius, sides);
+	}
+	
+	public void updateWheelRotation(){
+		rotation += velocity *10;
+		rotation2 += velocity * 10;
+		rotation3 += velocity *10;
+		rotation4 += velocity * 10;
+		
+	}
+	
+	public void calculateVelocity(){
+		if (Thread.activeCount() <= 3) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
+ 			Thread timedMissAdjustment = new Thread(new Runnable() {
+ 				float lastx = 0;
+				float lastFGx = 0;
+ 				public void run() {
+ 					try {
+ 						if(x <= (Display.getWidth() - 500) && x >= 400){
+ 							lastx = x;
+ 							Thread.sleep(20); // wait 20 milliseconds
+ 							velocity = (x - lastx)/20;
+ 							//System.out.println(velocity);
+ 						}else{
+ 							System.out.println("in hereeeeeeeeeeeeeeeeeeeeeeeee");
+ 							float fgX = GameObjects.getBall().getClosestObject().getX();
+ 							lastFGx = fgX;
+ 							Thread.sleep(20); // wait 20 milliseconds
+ 							velocity = (fgX - lastFGx)/20;
+ 							//System.out.println(velocity);
+ 						}
+ 					}catch(InterruptedException e) {
+		 				e.printStackTrace();
+ 					}
+ 				}
+ 		});
+	    timedMissAdjustment.start();
+		}
+	}
+	
+	public void drawSpokes(){
+		
+		drawThickLine(x+1,y+radius,x+1,y-radius,rotation);
+		drawThickLine(x,y+radius,x,y-radius,rotation2);
+		drawThickLine(x+1,y+radius,x+1,y-radius,rotation3);
+		drawThickLine(x,y+radius,x,y-radius,rotation4);
+
+		System.out.println("rotation: " + rotation);
+		if(rotation >= 180){
+			rotation = 0;
+		}
+		if(rotation2 >= 180){
+			rotation2 = 0;
+		}
+		if(rotation3 >= 180){
+			rotation3 = 0;
+		}
+		if(rotation4 >= 180){
+			rotation4 = 0;
+		}
+		
 	}
 	
 	public ArrayList<Object> closestPointOnLine(Vector2f p1, Vector2f p2, Vector2f c){
@@ -402,7 +466,7 @@ public class Ball {
 	public void jump(){
 		if(isBallOnSurface()){ // can only jump if on a foreground element surface
 			final float currentY = y;
-			if (Thread.activeCount() <= 2) { // this allows the main thread plus max of one timer thread
+			if (Thread.activeCount() <= 4) { // this allows the main thread plus max of one timer thread
 				Thread timedJump = new Thread(new Runnable() {
 					public void run() {
 						float gravity = 0;

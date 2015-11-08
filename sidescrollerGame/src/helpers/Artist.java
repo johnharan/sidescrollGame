@@ -48,17 +48,36 @@ public class Artist {
 		glLoadIdentity();
 		glOrtho(0,Display.getWidth(),Display.getHeight(),0,1,-1);
 		glMatrixMode(GL_MODELVIEW);
-		glEnable(GL_TEXTURE_2D); 
+		glEnable(GL_TEXTURE_2D);
 		GL11.glClearColor(0.74f, 0.83f, 0.98f, 1); // gives a light blue colour, get rgb colour and calculate rgb colour/255
-			
+		
 	}
 	
 	public static void drawLine(float x1, float y1, float x2, float y2){
 		glBegin(GL_LINES);
-		glVertex2f(x1,y1-20);
-		glVertex2f(x2,y2-20);
+		
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y2);
 		
 		glEnd();
+	}
+	
+	public static void drawThickLine(float x1, float y1, float x2, float y2, float rotation){
+		float midx = ( x1 + x2 )/2;
+		float midy = ( y1 + y2 )/2;
+		
+		GL11.glPushMatrix(); // this line and gl pop matrix prevent other objects from being rotated
+		GL11.glTranslatef(midx,midy,0.0f);
+		GL11.glRotatef(rotation,0.0f,0.0f,1.0f);
+		GL11.glTranslatef(-midx,-midy,0.0f);
+		
+		glBegin(GL_LINES);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y2);
+		glEnd();
+		
+		GL11.glPopMatrix();
+		GL11.glLineWidth(4.0f);
 	}
 	
 	public static void drawQuad(float x, float y, float width, float height){
@@ -87,19 +106,20 @@ public class Artist {
 	public static void drawCircle(float x, float y, float radius, int sides){
 		//glEnable(GL_LINE_SMOOTH);
 		//glLineWidth(5);
-		
 		glBegin(GL_TRIANGLE_FAN);
 		//glBegin(GL_LINE_LOOP);
 		
-		
+		GL11.glColor3f(0.52f,0.37f,0.26f);
 		for (int i = 0; i < 360; i += 360 / sides)
 		{
 		    double angle = i * Math.PI / 180; // increment angle by i each iteration
 		    glVertex2d(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
 		}
-
+		
 		glEnd();
-		glLoadIdentity();
+		GL11.glColor4f(1, 1, 1, 1); // sets colours back to normal
+		//glLoadIdentity();
+		
 	}
 	
 	public static void drawQuadTexture(Texture text, float x, float y, float width, float height, float rotation){
@@ -122,7 +142,7 @@ public class Artist {
 		glVertex2f(0,height);
 		glEnd();
 		glLoadIdentity();
-		
+		GL11.glDisable(GL_TEXTURE_2D); // this stops all objects fom having same colour as texture
 	}
 	
 	public static void drawNet(){
