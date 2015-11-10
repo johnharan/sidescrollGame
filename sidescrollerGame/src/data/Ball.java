@@ -18,8 +18,8 @@ import Foreground.Foreground;
 
 public class Ball {
 	private float x, y, radius, halfRadius, changeY, xoffset, velocity, rotation = 0, rotation2 = 90,rotation3 = 45,rotation4 = 135;
+
 	private int sides;
-	private boolean steepSlope;
 	private float xoffsetSlope;
 	private float yoffsetSlope;
 
@@ -63,12 +63,25 @@ public class Ball {
 			collisionDetection();
 			updateWheelRotation();
 			calculateVelocity();
-			System.out.println("velocity: " + velocity);
+			System.out.println("t: " + Thread.activeCount());
+			
+			//to do:
+			// should improve collision detection so that it detects collisions for multiple objects close to ball.
+			// At present, it detects collisions only for the closest object.
+			// maybe do a check to include all objects within a specified radius of ball.
+			// possibly specify a max number of objects for performance
+			//-----
+			// add sound effects
+			//-----
+			// add a bounce function like jump
+			// that will jump the ball with height equivalent to half -velocity if ball on surface
+			//System.out.println("velocity: " + velocity);
 		}else{
 			States.setState(States.GameStates.END);
 		}
 	}
 	
+
 	public void drawBall(){
 		drawCircle(x, y, radius, sides);
 	}
@@ -81,8 +94,8 @@ public class Ball {
 	}
 	
 	public void calculateVelocity(){
-		if (Thread.activeCount() <= 3) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
- 			Thread timedMissAdjustment = new Thread(new Runnable() {
+		if (Thread.activeCount() <= 4) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
+ 			Thread timedVelocity = new Thread(new Runnable() {
  				float lastx = 0;
 				float lastFGx = 0;
  				public void run() {
@@ -98,7 +111,6 @@ public class Ball {
  							velocity = ((x - lastx)/20);
  						}else{
  							float fgX = GameObjects.getBall().getClosestObject().getX();
- 							System.out.println("fgX: " + fgX);
  							lastFGx = fgX;
  							Thread.sleep(20); // wait 20 milliseconds
  							velocity = -(GameObjects.getBall().getClosestObject().getX() - lastFGx)/20;
@@ -108,7 +120,7 @@ public class Ball {
  					}
  				}
  		});
-	    timedMissAdjustment.start();
+	    timedVelocity.start();
 		}
 	}
 	
@@ -421,18 +433,6 @@ public class Ball {
 	}
 
 
-	public float getXoffsetSlope() {
-		return xoffsetSlope;
-	}
-
-	public float getYoffsetSlope() {
-		return yoffsetSlope;
-	}
-
-	public boolean isSteepSlope() {
-		return steepSlope;
-	}
-
 	public boolean isBallOnSurface(){
 		Foreground o = getClosestObject();
 		
@@ -449,10 +449,39 @@ public class Ball {
 		return false;
 	}
 	
+	/*
+	public void bounce(final float velocity){
+		if(isBallOnSurface()){ // can only jump if on a foreground element surface
+			if (Thread.activeCount() <= 5) { // this allows the main thread plus max of one timer thread
+				Thread timedJump = new Thread(new Runnable() {
+					public void run() {
+						float gravity = 0;
+						while (y >= velocity - 200) {
+							y -= 1 * Clock.getDelta() - gravity;
+							if (gravity > 1 * Clock.getDelta()) {
+								gravity = 0;
+								break;
+							} else {
+								gravity += 0.9f;
+							}
+							try {
+								Thread.sleep(5);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				});
+				timedJump.start();
+			}
+		}
+	}
+	*/
+	
 	public void jump(){
 		if(isBallOnSurface()){ // can only jump if on a foreground element surface
 			final float currentY = y;
-			if (Thread.activeCount() <= 4) { // this allows the main thread plus max of one timer thread
+			if (Thread.activeCount() <= 5) { // this allows the main thread plus max of one timer thread
 				Thread timedJump = new Thread(new Runnable() {
 					public void run() {
 						float gravity = 0;
@@ -545,5 +574,14 @@ public class Ball {
 	public float getRadius() {
 		return radius;
 	}
+	
+	public float getXoffsetSlope() {
+		return xoffsetSlope;
+	}
+
+	public float getYoffsetSlope() {
+		return yoffsetSlope;
+	}
+
 
 }

@@ -99,11 +99,6 @@ public class InputManager {
 			}		
 		}
 		
-		
-		// at -63.35 the ball comes to a complete stop, any lower and it will move up, any higher and it will move down
-		// so <= -63.35 -> move ball only at 0.7f
-		// and > -63.35 -> as slope decreases add more to foreground x, and take from ball x 
-		
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			Foreground closestRotated = GameObjects.getBall().getClosestRotatedObject();
