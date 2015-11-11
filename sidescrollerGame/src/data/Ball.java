@@ -4,12 +4,9 @@ import static helpers.Artist.drawCircle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector2f;
 
 import stateManager.States;
@@ -68,7 +65,9 @@ public class Ball {
 			//to do:
 			// should improve collision detection so that it detects collisions for multiple objects close to ball.
 			// At present, it detects collisions only for the closest object.
-			// maybe do a check to include all objects within a specified radius of ball.
+			// maybe have a list of closest, next closest and so on, using the get closest object.
+			// overload the get closest method so you could pass a parameter to get the n'th closest items in an array,
+			// or get just the closest.
 			// possibly specify a max number of objects for performance
 			//-----
 			// add sound effects
@@ -294,32 +293,6 @@ public class Ball {
 		return false;
 		
 	}
-
-	
-	public Vector2f getOffset(){
-		Vector2f offset = new Vector2f(0,0);
-		Foreground o = getClosestObject(); // gets nearest foreground element to ball
-		
-		if(o.getRotation() != 0){
-		
-			HashMap<String, Float> rotatedCoords = calculateRotatedCoords();
-
-			float x1 = rotatedCoords.get("x1");
-			float y1 = rotatedCoords.get("y1");
-			float x2 = rotatedCoords.get("x2");
-			float y2 = rotatedCoords.get("y2");
-
-			Vector2f c = new Vector2f(x, y);
-			Vector2f p1 = new Vector2f(x1, y1);
-			Vector2f p2 = new Vector2f(x2, y2);
-
-			offset = (Vector2f) closestPointOnLine(p1, p2, c).get(1);
-			
-			return offset;
-		}
-		
-		return offset;
-	}
 	
 	
 	public void collisionDetection(){
@@ -346,6 +319,11 @@ public class Ball {
 
 		Foreground closest = getClosestObject(); // gets nearest foreground element to ball
 		Foreground closestRotated = getClosestRotatedObject();
+		
+		ArrayList<Foreground> nClosestObjects = getNClosestObjects(4);
+		for(int i=0;i<nClosestObjects.size();i++){
+			System.out.println(i + " closest: " + nClosestObjects.get(i).getX() +",y = "+ nClosestObjects.get(i).getY());
+		}
 		
 		HashMap<String, Float> rotatedCoords = calculateRotatedCoords();
 		
@@ -506,8 +484,36 @@ public class Ball {
 		}
 	}
 	
+	public ArrayList<Foreground> getNClosestObjects(int n){
+		ArrayList<Foreground> closestObjects = new ArrayList<Foreground>();
+		ArrayList<Foreground> foregroundObjects = new ArrayList<Foreground>(GameObjects.getForeground().getForegroundElements());
+		
+		Foreground closestObject = null;
+			
+		while(n != 0){
+			System.out.println("size: " + foregroundObjects.size());
+			int index = 0;
+			float centerX, centerY = 0;
+			double minDistance = Double.MAX_VALUE, distance = 0;
+			for(Foreground o: foregroundObjects){
+				centerX = o.getX() + (o.getWidth() / 2);
+				centerY = o.getY() + (o.getHeight() / 2);
+				distance = Math.sqrt(Math.pow(centerX - x, 2) + Math.pow(centerY - y, 2)); // use distance formula for two coordinate points
+
+				if(distance < minDistance){ // compare distances to find minimum distance
+					minDistance = distance;
+					closestObject = o;
+					index = foregroundObjects.indexOf(o);
+				}
+			}
+			closestObjects.add(closestObject);
+			foregroundObjects.remove(index);
+			n--;
+		}
+		return closestObjects;
+	}
+	
 	public Foreground getClosestObject(){
-		Foreground[] closest = new Foreground[2];
 		float centerX, centerY = 0;
 		double distance = 0;
 		double minDistance = Double.MAX_VALUE;
