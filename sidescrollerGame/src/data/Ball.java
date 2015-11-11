@@ -100,6 +100,8 @@ public class Ball {
  							lastx = x;
  							Thread.sleep(20); // wait 20 milliseconds
  							velocity = ((x - lastx)/20);
+ 						}else if(((Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) && GameObjects.getBall().getClosestObject().getRotation() <= -66.23f) || (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && GameObjects.getBall().getClosestObject().getRotation() >= 66.23f){
+ 							// simulates no friction on a steep slope
  						}else{
  							float fgX = GameObjects.getBall().getClosestObject().getX();
  							lastFGx = fgX;
