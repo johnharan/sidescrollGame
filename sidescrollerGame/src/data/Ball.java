@@ -60,13 +60,15 @@ public class Ball {
 			collisionDetection();
 			calculateVelocity();
 			updateWheelRotation();
-			
+			//addMomentum();
 			//to do:
 			//-----
 			// add sound effects
 			//-----
 			// add a bounce function like jump
 			// that will jump the ball with height equivalent to half -velocity if ball on surface
+			//-----
+			// ball momentum
 		}else{
 			States.setState(States.GameStates.END);
 		}
@@ -421,6 +423,37 @@ public class Ball {
 		}
 	}
 
+	/*
+	private void addMomentum() {
+		if(GameObjects.getBall().isRotatedObjectColliding()){ // can only jump if on a foreground element surface
+			if (Thread.activeCount() <= 6) { // this allows the main thread plus max of one timer thread
+				Thread timedJump = new Thread(new Runnable() {
+					public void run() {
+						float momentum = 0;
+						while (momentum < 100) {
+							try {
+								momentum += 0.1f * (GameObjects.getBall().getClosestObject().getRotation()/90);
+								if(GameObjects.getBall().getClosestObject().getRotation() < 0){
+									x -= momentum;
+								}else if(GameObjects.getBall().getClosestObject().getRotation() == 0){
+									momentum = 0;
+								}else{
+									x -= momentum;
+								}
+								
+								Thread.sleep(50);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				});
+				timedJump.start();
+			}
+		}
+		
+	}
+	 */
 
 	public boolean isBallOnSurface(){
 		Foreground o = getClosestObject();
