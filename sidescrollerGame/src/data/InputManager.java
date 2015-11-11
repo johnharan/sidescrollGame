@@ -1,5 +1,7 @@
 package data;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -73,7 +75,11 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
-			if (closest.getRotation() != 0  && GameObjects.getBall().isRotatedObjectColliding()){
+			
+			if(closest.getRotation() >= 66.23f){
+				float ballSpeed = 0.7f * numberObjects;
+				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
+			}else if (closest.getRotation() != 0  && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
 				float speed = (xoffset / numberObjects);
 				System.out.println(xoffset);
@@ -101,11 +107,13 @@ public class InputManager {
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
-			Foreground closestRotated = GameObjects.getBall().getClosestRotatedObject();
-			System.out.println(closestRotated.getRotation());
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			
-			if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
+			if(closest.getRotation() <= -66.23f){
+				float ballSpeed = 0.7f * numberObjects;
+				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
+			}
+			else if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
 				float speed = -(xoffset / numberObjects);
 				System.out.println(xoffset);
@@ -124,7 +132,6 @@ public class InputManager {
 				if(x >= rightEdge){
 					for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
 						o.setX(o.getX() - (0.7f) * Clock.getDelta());
-						
 					}
 				}else{
 					float ballSpeed = 0.7f * numberObjects;

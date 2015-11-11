@@ -30,7 +30,7 @@ public class GameObjects {
 		SolidGround large12 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2900,Display.getHeight()-2060,1024,512,-50.0f);
 		SolidGround large13 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 3450,Display.getHeight()-2720,1024,512,-50.0f);
 		//SolidGround large14 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4000,Display.getHeight()-3380,1024,512,-50.0f);
-		SolidGround large14 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4000,Display.getHeight()-3670,1024,512,-70.0f);
+		SolidGround large14 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 3500,Display.getHeight()-2870,1024,512,-75.23f);
 		SolidGround large15 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), -600,Display.getHeight()-900,1024,512,0.0f);
 		SolidGround large16 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 450,Display.getHeight()-1640,1024,512,-40.0f);
 		SolidGround large17 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1050,Display.getHeight()-2150,1024,512,-40.0f);
