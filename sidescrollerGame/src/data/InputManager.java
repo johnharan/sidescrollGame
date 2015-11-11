@@ -77,7 +77,7 @@ public class InputManager {
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			
 			if(closest.getRotation() >= 66.23f){ // if slope steep, move only ball
-				float ballSpeed = 0.7f * numberObjects;
+				float ballSpeed = -0.7f * numberObjects;
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
 			}else if (closest.getRotation() != 0  && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
