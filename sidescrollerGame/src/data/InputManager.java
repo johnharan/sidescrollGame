@@ -76,21 +76,16 @@ public class InputManager {
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			
-			if(closest.getRotation() >= 66.23f){
+			if(closest.getRotation() >= 66.23f){ // if slope steep, move only ball
 				float ballSpeed = 0.7f * numberObjects;
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
 			}else if (closest.getRotation() != 0  && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
 				float speed = (xoffset / numberObjects);
-				System.out.println(xoffset);
-				// find what balance makes ball stay in same position (the x position at which it entered a slope)
-				float rotation = GameObjects.getBall().getClosestObject().getRotation();
 				for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
 					o.setX(o.getX() + (0.7f-speed) * Clock.getDelta());
 					GameObjects.getBall().setX(GameObjects.getBall().getX() - (0.0f + speed));
 				}
-				System.out.println("x: " + GameObjects.getBall().getX() + ",delta: " + Clock.getDelta() + ",rotation: " + rotation);
-				
 			}else{
 				float x = GameObjects.getBall().getX();
 				float leftEdge = 400;
@@ -109,23 +104,17 @@ public class InputManager {
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			
-			if(closest.getRotation() <= -66.23f){
+			if(closest.getRotation() <= -66.23f){ // if slope steep, move only ball
 				float ballSpeed = 0.7f * numberObjects;
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
 			}
 			else if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
 				float xoffset = GameObjects.getBall().getXoffset();
 				float speed = -(xoffset / numberObjects);
-				System.out.println(xoffset);
-				// find what balance makes ball stay in same position (the x position at which it entered a slope)
-				float rotation = GameObjects.getBall().getClosestObject().getRotation();
 				for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
 					o.setX(o.getX() - (0.7f-speed) * Clock.getDelta());
 					GameObjects.getBall().setX(GameObjects.getBall().getX() + (0.0f + speed));
 				}
-				System.out.println("x: " + GameObjects.getBall().getX() + ",delta: " + Clock.getDelta() + ",rotation: " + rotation);
-				
-			// to do: need to stop ball if it reaches a wall
 			}else{
 				float x = GameObjects.getBall().getX();
 				float rightEdge = Display.getWidth() - 500;

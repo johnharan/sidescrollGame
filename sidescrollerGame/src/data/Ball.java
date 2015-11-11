@@ -58,23 +58,15 @@ public class Ball {
 			gravity();
 			adjustCameraY();
 			collisionDetection();
-			updateWheelRotation();
 			calculateVelocity();
-			System.out.println("t: " + Thread.activeCount());
+			updateWheelRotation();
 			
 			//to do:
-			// should improve collision detection so that it detects collisions for multiple objects close to ball.
-			// At present, it detects collisions only for the closest object.
-			// maybe have a list of closest, next closest and so on, using the get closest object.
-			// overload the get closest method so you could pass a parameter to get the n'th closest items in an array,
-			// or get just the closest.
-			// possibly specify a max number of objects for performance
 			//-----
 			// add sound effects
 			//-----
 			// add a bounce function like jump
 			// that will jump the ball with height equivalent to half -velocity if ball on surface
-			//System.out.println("velocity: " + velocity);
 		}else{
 			States.setState(States.GameStates.END);
 		}
@@ -143,18 +135,13 @@ public class Ball {
 		float length_line_v = 0;
 		float length_dist_v = 0;
 
-		
 		Vector2f.sub(p2, p1, line_v);
 		Vector2f.sub(c, p1, pt_v);
-		
-		//System.out.println("p1: " + p1 + ",normalise: " + p1.normalise() + ",length: " + p1.length());
 		
 		line_v.normalise(unit_line_v); // normalise line_v and store result in unit_line_v
 		
 		length_proj_v = Vector2f.dot(pt_v, unit_line_v); // ||proj_v|| = pt_v . unit_line_v
 		length_line_v = line_v.length(); // |line_v|
-		
-		//System.out.println("|proj_v| = " + length_proj_v);
 		
 		if(length_proj_v < 0){
 			closest = p1;
@@ -168,8 +155,7 @@ public class Ball {
 		float proj_v_y = unit_line_v.getY() * length_proj_v;
 		
 		Vector2f proj_v = new Vector2f(proj_v_x,proj_v_y);
-		
-		//System.out.println("unit_line_v: "+ unit_line_v + ",length_proj_v: " + length_proj_v + ",proj_v: " + proj_v);
+
 		Vector2f.add(p1, proj_v, closest);
 		
 		Vector2f.sub(c, closest, dist_v);
@@ -369,34 +355,10 @@ public class Ball {
 		if(x <= GameObjects.getForeground().getForegroundElements().get(0).getX() + radius){ // if ball is at far left of first ground element
 			x = GameObjects.getForeground().getForegroundElements().get(0).getX() + radius;
 		}
-		
-		// below is hard coded collision "wall"
-		// 25 is rotated object, 21 is surface before toated object
-		
-		// note: need dynamic version of below if statement (collision check)
-		// how to: will need updated (x1,y1:x2,y2) values for
-		// rotated object and object before rotated object (may also be rotated).
-		// this will allow exact specification of collision point
-		// (i.e. will need collision function called from update() 
-		// that will calculate and set private x1Rotated,y1Rotated and x2Rotated,y2Rotated values for Ball. (these must be up to date, just like x and y values for ball)
-		// these can then be accessed for example, in an if statement, just like the hard-coded version below)
-		
-		if(isBallOnSurface() && x >= GameObjects.getForeground().getForegroundElements().get(25).getX() + halfRadius + 20 && y >= GameObjects.getForeground().getForegroundElements().get(21).getY() - radius && y <= GameObjects.getForeground().getForegroundElements().get(21).getY()){ // if ball is at far left of first ground element
-			x = GameObjects.getForeground().getForegroundElements().get(25).getX() + halfRadius  + 20;
-		}
 
-		
-
-		ArrayList<Foreground> nClosestObjects = getNClosestObjects(4);
-		for(int i=0;i<nClosestObjects.size();i++){
-			System.out.println(i + " closest: " + nClosestObjects.get(i).getX() +",y = "+ nClosestObjects.get(i).getY());
-		}
+		ArrayList<Foreground> nClosestObjects = getNClosestObjects(2);
 		
 		for(Foreground closest: nClosestObjects){
-			/* may want to stop ball if it is on a slope and moves onto a steep slope
-			 * could be done by using x2,y2 of closest object (it is currently glitching between closest and closest rotated) 
-			 * 
-			 */
 
 			if(closest.getRotation() == 0){ // for non rotated object collision
 				boolean isInsideLeftAndRight = (Boolean) (x >= closest.getX() - halfRadius ? x <= (closest.getX() + closest.getWidth() + halfRadius):false);
@@ -432,15 +394,6 @@ public class Ball {
 				float y1 = rotatedCoords.get("y1");
 				float x2 = rotatedCoords.get("x2");
 				float y2 = rotatedCoords.get("y2");
-				
-				
-				if(closest.getRotation() <= -63.35f && y >= y1 - radius*2){
-
-					System.out.println("");
-					drawLine(x1-100, y1-100, x1-100, y1 - 200);
-
-				}
-				
 				
 				if((x < x1 - halfRadius|| x > x2 + halfRadius) || ((closest.getRotation() < 0) && (y < y2 - radius)) ||  ((closest.getRotation() > 0) && (y < y1 - radius))){ // don't need to check outside line	
 				
@@ -547,7 +500,6 @@ public class Ball {
 		Foreground closestObject = null;
 			
 		while(n != 0){
-			System.out.println("size: " + foregroundObjects.size());
 			int index = 0;
 			float centerX, centerY = 0;
 			double minDistance = Double.MAX_VALUE, distance = 0;
