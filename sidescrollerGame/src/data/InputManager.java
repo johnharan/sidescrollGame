@@ -75,26 +75,28 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
+			boolean isRotatedObjectColliding = GameObjects.getBall().isRotatedObjectColliding();
+			float mainSpeed = 0.7f;
 			
-			if(closest.getRotation() >= 66.23f){ // if slope steep, move only ball
-				float ballSpeed = -0.7f * numberObjects;
-				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
-			}else if (closest.getRotation() != 0  && GameObjects.getBall().isRotatedObjectColliding()){
+			if(closest.getRotation() >= 66.23f && isRotatedObjectColliding){ // if slope steep, move only ball
+				float ballSpeed = mainSpeed * numberObjects;
+				GameObjects.getBall().setX(GameObjects.getBall().getX() - ballSpeed);
+			}else if (closest.getRotation() != 0  && isRotatedObjectColliding){
 				float xoffset = GameObjects.getBall().getXoffset();
-				float speed = (xoffset / numberObjects);
+				float speedAdjust = (xoffset / numberObjects);
 				for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
-					o.setX(o.getX() + (0.7f-speed) * Clock.getDelta());
-					GameObjects.getBall().setX(GameObjects.getBall().getX() - (0.0f + speed));
+					o.setX(o.getX() + (mainSpeed-speedAdjust) * Clock.getDelta());
+					GameObjects.getBall().setX(GameObjects.getBall().getX() - (0.0f + speedAdjust));
 				}
 			}else{
 				float x = GameObjects.getBall().getX();
 				float leftEdge = 400;
 				if(x <= leftEdge){
 					for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
-						o.setX(o.getX() + (0.7f) * Clock.getDelta());
+						o.setX(o.getX() + mainSpeed * Clock.getDelta());
 					}
 				}else{
-					float ballSpeed = 0.7f * numberObjects;
+					float ballSpeed = mainSpeed * numberObjects;
 					GameObjects.getBall().setX(GameObjects.getBall().getX() - ballSpeed);
 				}
 			}		
@@ -103,27 +105,29 @@ public class InputManager {
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)){
 			Foreground closest = GameObjects.getBall().getClosestObject();
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
+			boolean isRotatedObjectColliding = GameObjects.getBall().isRotatedObjectColliding();
+			float mainSpeed = 0.7f;
 			
-			if(closest.getRotation() <= -66.23f){ // if slope steep, move only ball
-				float ballSpeed = 0.7f * numberObjects;
+			if(closest.getRotation() <= -66.23f && isRotatedObjectColliding){ // if slope steep, move only ball
+				float ballSpeed = mainSpeed * numberObjects;
 				GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
 			}
-			else if (closest.getRotation() != 0 && GameObjects.getBall().isRotatedObjectColliding()){
+			else if (closest.getRotation() != 0 && isRotatedObjectColliding){
 				float xoffset = GameObjects.getBall().getXoffset();
-				float speed = -(xoffset / numberObjects);
+				float speedAdjust = -(xoffset / numberObjects);
 				for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
-					o.setX(o.getX() - (0.7f-speed) * Clock.getDelta());
-					GameObjects.getBall().setX(GameObjects.getBall().getX() + (0.0f + speed));
+					o.setX(o.getX() - (mainSpeed-speedAdjust) * Clock.getDelta());
+					GameObjects.getBall().setX(GameObjects.getBall().getX() + (0.0f + speedAdjust));
 				}
 			}else{
 				float x = GameObjects.getBall().getX();
 				float rightEdge = Display.getWidth() - 500;
 				if(x >= rightEdge){
 					for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
-						o.setX(o.getX() - (0.7f) * Clock.getDelta());
+						o.setX(o.getX() - mainSpeed * Clock.getDelta());
 					}
 				}else{
-					float ballSpeed = 0.7f * numberObjects;
+					float ballSpeed = mainSpeed * numberObjects;
 					GameObjects.getBall().setX(GameObjects.getBall().getX() + ballSpeed);
 				}
 			}		

@@ -27,7 +27,7 @@ public class GameObjects {
 		SolidGround large9 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2048,3700,1024,512,0.0f);
 		SolidGround large10 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 3072,3700,1024,512,0.0f);
 		SolidGround large11 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2350,Display.getHeight()-1400,1024,512,-50.0f);
-		SolidGround large12 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2900,Display.getHeight()-2060,1024,512,-50.0f);
+		SolidGround large12 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2700,Display.getHeight()-2060,1024,512,-50.0f);
 		SolidGround large13 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 3450,Display.getHeight()-2720,1024,512,-50.0f);
 		//SolidGround large14 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4000,Display.getHeight()-3380,1024,512,-50.0f);
 		SolidGround large14 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 3950,Display.getHeight()-3550,1024,512,-70.0f);
@@ -45,8 +45,8 @@ public class GameObjects {
 		SolidGround large26 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 5830,Display.getHeight()-1960,1024,512,-70.35f);
 		SolidGround large27 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4000,3650,1024,512,-20.0f);
 		//SolidGround large28 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4440,Display.getHeight()-1035,1024,512,-62.0f);
-		SolidGround large28 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4370,Display.getHeight()-1105,1024,512,-70.0f);
-		SolidGround large29 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2870,Display.getHeight()-1105,1024,512,70.0f);
+		SolidGround large28 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 4350,Display.getHeight()-1005,1024,512,-70.0f);
+		SolidGround large29 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 2770,Display.getHeight()-905,1024,512,70.0f);
 		// texture width/height must be multiple of 16
 		foreground.addElement(large);
 		foreground.addElement(large2);
