@@ -53,10 +53,39 @@ public class Ball {
 		}
 	}
 	
+	public void adjustCameraX(){ // adjusts camera x when ball is on slope and moving outside left/right edge
+		float mainSpeed = 0.0f;
+		float leftEdge = 300;
+		float rightEdge = Display.getWidth()-300;
+		Foreground closest = GameObjects.getBall().getClosestObject();
+		boolean isBallCollidingNonRotatedObject = GameObjects.getBall().isBallCollidingNonRotatedObject();
+		boolean isLeftRightKeyDown = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A));
+		boolean isClosestObjectRotated = closest.getRotation() != 0;
+		if(x <= leftEdge && isClosestObjectRotated && !isBallCollidingNonRotatedObject && !isLeftRightKeyDown){
+			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
+			float xoffset = GameObjects.getBall().getXoffset();
+			float speedAdjust = (xoffset / numberObjects);
+			for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
+				o.setX(o.getX() + (mainSpeed-speedAdjust) * Clock.getDelta());
+				GameObjects.getBall().setX(GameObjects.getBall().getX() - (0.0f + speedAdjust));
+			}
+		}else if(x >= rightEdge && isClosestObjectRotated && !isBallCollidingNonRotatedObject && !isLeftRightKeyDown){
+			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
+			float xoffset = GameObjects.getBall().getXoffset();
+			float speedAdjust = -(xoffset / numberObjects);
+			for (Foreground o : GameObjects.getForeground().getForegroundElements()) {
+				o.setX(o.getX() - (mainSpeed-speedAdjust) * Clock.getDelta());
+				GameObjects.getBall().setX(GameObjects.getBall().getX() + (0.0f + speedAdjust));
+			}
+		}
+	}
+
+	
 	public void updateBall(){
 		if(isBallAlive() == true){
 			gravity();
 			adjustCameraY();
+			adjustCameraX();
 			collisionDetection();
 			calculateVelocity();
 			updateWheelRotation();
@@ -92,19 +121,22 @@ public class Ball {
  				float lastx = 0;
 				float lastFGx = 0;
  				public void run() {
+ 					float leftEdge = 400;
+ 					float rightEdge = Display.getWidth() - 500;
+ 					boolean isRotatedObjectColliding = GameObjects.getBall().isRotatedObjectColliding();
  					try {
- 						if((x > 400 && x < (Display.getWidth() - 500) && !GameObjects.getBall().isRotatedObjectColliding()) 
- 							|| (GameObjects.getBall().isRotatedObjectColliding() 
+ 						if((x > leftEdge && x < rightEdge && !isRotatedObjectColliding) 
+ 							|| (isRotatedObjectColliding 
  							&& !(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) 
- 							&& !(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)))
- 							|| (x < 400 && (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)) && !GameObjects.getBall().isRotatedObjectColliding())
- 							|| (x > (Display.getWidth() - 500) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && !GameObjects.getBall().isRotatedObjectColliding())){
+ 							&& !(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)) && x > leftEdge && x < rightEdge)
+ 							|| (x < leftEdge && (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)) && !isRotatedObjectColliding)
+ 							|| (x > rightEdge && (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && !isRotatedObjectColliding)){
  							lastx = x;
  							Thread.sleep(20); // wait 20 milliseconds
  							velocity = ((x - lastx)/20);
  						}else if(((Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) && GameObjects.getBall().getClosestObject().getRotation() <= -66.23f) || (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && GameObjects.getBall().getClosestObject().getRotation() >= 66.23f){
  							// simulates no friction on a steep slope
- 						}else{
+ 						}else{ // velocity for foreground
  							float fgX = GameObjects.getBall().getClosestObject().getX();
  							lastFGx = fgX;
  							Thread.sleep(20); // wait 20 milliseconds
@@ -365,31 +397,7 @@ public class Ball {
 		for(Foreground closest: nClosestObjects){
 
 			if(closest.getRotation() == 0){ // for non rotated object collision
-				boolean isInsideLeftAndRight = (Boolean) (x >= closest.getX() - halfRadius ? x <= (closest.getX() + closest.getWidth() + halfRadius):false);
-				boolean isOnTop = (Boolean) (y >= closest.getY() - radius ? y <= (closest.getY() - radius + 100):false);
-				boolean isOnBottom = (Boolean) (y <= (closest.getY() + closest.getHeight() + radius) ? y >= (closest.getY() + closest.getHeight() - 20):false);
-				boolean isInsideTopAndBottom = (Boolean) (y >= closest.getY() - halfRadius ? y <= (closest.getY() + closest.getHeight() + halfRadius):false);
-				boolean isOnLeft = (Boolean) (x >= closest.getX() - radius ? x <= (closest.getX() + 20):false);
-				boolean isOnRight = (Boolean) (x <= (closest.getX() + closest.getWidth() + radius) ? x >= (closest.getX() + closest.getWidth() - 20):false);
-
-
-				// top of element
-				if (isOnTop && isInsideLeftAndRight) { // stops ball at top/surface of an element
-					y = closest.getY() - radius;
-				}
-
-				if (isOnBottom && isInsideLeftAndRight) { // stops ball at bottom of an element
-					y = closest.getY() + closest.getHeight() + radius;
-				}
-
-				// sides of element
-				if (isOnLeft && isInsideTopAndBottom) { // stops ball at left hand side of an element
-					x = closest.getX() - radius;
-				}
-
-				if (isOnRight && isInsideTopAndBottom) { // stops ball at right hand side of an element
-					x = (closest.getX() + closest.getWidth() + radius);
-				}
+				isBallCollidingNonRotatedObject(closest);
 
 			}else{
 				HashMap<String, Float> rotatedCoords = calculateRotatedCoords(closest);
@@ -471,6 +479,76 @@ public class Ball {
 		return false;
 	}
 	
+	public boolean isBallCollidingNonRotatedObject(){
+		ArrayList<Foreground> nClosestObjects = getNClosestObjects(2);
+		
+		for(Foreground closest: nClosestObjects){
+
+			if(closest.getRotation() == 0){ // for non rotated object collision
+				boolean isInsideLeftAndRight = (Boolean) (x >= closest.getX() - halfRadius ? x <= (closest.getX() + closest.getWidth() + halfRadius):false);
+				boolean isOnTop = (Boolean) (y >= closest.getY() - radius ? y <= (closest.getY() - radius + 100):false);
+				boolean isOnBottom = (Boolean) (y <= (closest.getY() + closest.getHeight() + radius) ? y >= (closest.getY() + closest.getHeight() - 20):false);
+				boolean isInsideTopAndBottom = (Boolean) (y >= closest.getY() - halfRadius ? y <= (closest.getY() + closest.getHeight() + halfRadius):false);
+				boolean isOnLeft = (Boolean) (x >= closest.getX() - radius ? x <= (closest.getX() + 20):false);
+				boolean isOnRight = (Boolean) (x <= (closest.getX() + closest.getWidth() + radius) ? x >= (closest.getX() + closest.getWidth() - 20):false);
+
+
+				// top of element
+				if (isOnTop && isInsideLeftAndRight) { // stops ball at top/surface of an element
+					return true;
+				}
+
+				if (isOnBottom && isInsideLeftAndRight) { // stops ball at bottom of an element
+					return true;
+				}
+
+				// sides of element
+				if (isOnLeft && isInsideTopAndBottom) { // stops ball at left hand side of an element
+					return true;
+				}
+
+				if (isOnRight && isInsideTopAndBottom) { // stops ball at right hand side of an element
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isBallCollidingNonRotatedObject(Foreground closest){
+		boolean isInsideLeftAndRight = (Boolean) (x >= closest.getX() - halfRadius ? x <= (closest.getX() + closest.getWidth() + halfRadius):false);
+		boolean isOnTop = (Boolean) (y >= closest.getY() - radius ? y <= (closest.getY() - radius + 100):false);
+		boolean isOnBottom = (Boolean) (y <= (closest.getY() + closest.getHeight() + radius) ? y >= (closest.getY() + closest.getHeight() - 20):false);
+		boolean isInsideTopAndBottom = (Boolean) (y >= closest.getY() - halfRadius ? y <= (closest.getY() + closest.getHeight() + halfRadius):false);
+		boolean isOnLeft = (Boolean) (x >= closest.getX() - radius ? x <= (closest.getX() + 20):false);
+		boolean isOnRight = (Boolean) (x <= (closest.getX() + closest.getWidth() + radius) ? x >= (closest.getX() + closest.getWidth() - 20):false);
+
+
+		// top of element
+		if (isOnTop && isInsideLeftAndRight) { // stops ball at top/surface of an element
+			y = closest.getY() - radius;
+			return true;
+		}
+
+		if (isOnBottom && isInsideLeftAndRight) { // stops ball at bottom of an element
+			y = closest.getY() + closest.getHeight() + radius;
+			return true;
+		}
+
+		// sides of element
+		if (isOnLeft && isInsideTopAndBottom) { // stops ball at left hand side of an element
+			x = closest.getX() - radius;
+			return true;
+		}
+
+		if (isOnRight && isInsideTopAndBottom) { // stops ball at right hand side of an element
+			x = (closest.getX() + closest.getWidth() + radius);
+			return true;
+		}
+			
+		return false;
+	}
+	
 	/*
 	public void bounce(final float velocity){
 		if(isBallOnSurface()){ // can only jump if on a foreground element surface
@@ -501,7 +579,9 @@ public class Ball {
 	*/
 	
 	public void jump(){
-		if(isBallOnSurface()){ // can only jump if on a foreground element surface
+		float rotation = GameObjects.getBall().getClosestObject().getRotation();
+		boolean isSlopeSteep = rotation<= -66.23 || rotation >= 66.23;
+		if(isBallOnSurface() && !isSlopeSteep){ // can only jump if on a foreground element surface
 			final float currentY = y;
 			if (Thread.activeCount() <= 5) { // this allows the main thread plus max of one timer thread
 				Thread timedJump = new Thread(new Runnable() {
