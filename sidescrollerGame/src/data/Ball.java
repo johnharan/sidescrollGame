@@ -53,15 +53,16 @@ public class Ball {
 		}
 	}
 	
-	public void adjustCameraX(){ // adjusts camera x when ball is on slope and moving outside left/right edge
+	public void adjustCameraX(){ // adjusts camera x when ball is on slope and moving outside left/right edge and left/right key not down
 		float mainSpeed = 0.0f;
-		float leftEdge = 300;
-		float rightEdge = Display.getWidth()-300;
+		float leftEdge = 400;
+		float rightEdge = Display.getWidth()-500;
 		Foreground closest = GameObjects.getBall().getClosestObject();
 		boolean isBallCollidingNonRotatedObject = GameObjects.getBall().isBallCollidingNonRotatedObject();
-		boolean isLeftRightKeyDown = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A));
+		boolean isLeftRightKeyDown = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) || (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A));
 		boolean isClosestObjectRotated = closest.getRotation() != 0;
 		if(x <= leftEdge && isClosestObjectRotated && !isBallCollidingNonRotatedObject && !isLeftRightKeyDown){
+			System.out.println("leftedge");
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			float xoffset = GameObjects.getBall().getXoffset();
 			float speedAdjust = (xoffset / numberObjects);
@@ -70,6 +71,7 @@ public class Ball {
 				GameObjects.getBall().setX(GameObjects.getBall().getX() - (0.0f + speedAdjust));
 			}
 		}else if(x >= rightEdge && isClosestObjectRotated && !isBallCollidingNonRotatedObject && !isLeftRightKeyDown){
+			System.out.println("rightedge");
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			float xoffset = GameObjects.getBall().getXoffset();
 			float speedAdjust = -(xoffset / numberObjects);
@@ -116,7 +118,7 @@ public class Ball {
 	}
 	
 	public void calculateVelocity(){
-		if (Thread.activeCount() <= 4) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
+		if (Thread.activeCount() <= 5) { // this allows the main thread plus max of one timer thread. need to account for sound effect threads also
  			Thread timedVelocity = new Thread(new Runnable() {
  				float lastx = 0;
 				float lastFGx = 0;
@@ -125,7 +127,7 @@ public class Ball {
  					float rightEdge = Display.getWidth() - 500;
  					boolean isRotatedObjectColliding = GameObjects.getBall().isRotatedObjectColliding();
  					try {
- 						if((x > leftEdge && x < rightEdge && !isRotatedObjectColliding) 
+ 						if((x > leftEdge && x < rightEdge && !isRotatedObjectColliding) // when ball only moves
  							|| (isRotatedObjectColliding 
  							&& !(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) 
  							&& !(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)|| Keyboard.isKeyDown(Keyboard.KEY_D)) && x > leftEdge && x < rightEdge)
@@ -136,7 +138,7 @@ public class Ball {
  							velocity = ((x - lastx)/20);
  						}else if(((Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) && GameObjects.getBall().getClosestObject().getRotation() <= -66.23f) || (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A)) && GameObjects.getBall().getClosestObject().getRotation() >= 66.23f){
  							// simulates no friction on a steep slope
- 						}else{ // velocity for foreground
+ 						}else{ // when foreground only moves
  							float fgX = GameObjects.getBall().getClosestObject().getX();
  							lastFGx = fgX;
  							Thread.sleep(20); // wait 20 milliseconds
