@@ -62,7 +62,6 @@ public class Ball {
 		boolean isLeftRightKeyDown = (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D)) || (Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A));
 		boolean isClosestObjectRotated = closest.getRotation() != 0;
 		if(x <= leftEdge && isClosestObjectRotated && !isBallCollidingNonRotatedObject && !isLeftRightKeyDown){
-			System.out.println("leftedge");
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			float xoffset = GameObjects.getBall().getXoffset();
 			float speedAdjust = (xoffset / numberObjects);
@@ -71,7 +70,6 @@ public class Ball {
 				GameObjects.getBall().setX(GameObjects.getBall().getX() - (0.0f + speedAdjust));
 			}
 		}else if(x >= rightEdge && isClosestObjectRotated && !isBallCollidingNonRotatedObject && !isLeftRightKeyDown){
-			System.out.println("rightedge");
 			int numberObjects = GameObjects.getForeground().getForegroundElements().size();
 			float xoffset = GameObjects.getBall().getXoffset();
 			float speedAdjust = -(xoffset / numberObjects);

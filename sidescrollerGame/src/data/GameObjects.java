@@ -2,6 +2,7 @@ package data;
 
 import static helpers.Artist.loadTexture;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import Foreground.Foreground;
@@ -16,6 +17,8 @@ public class GameObjects {
 		ball = new Ball(startX,startY,70,40);
 		foreground = new Foreground();
 		
+		
+		//SolidGround grass1 = new SolidGround(loadTexture("res/grass.png","PNG"), 0,Display.getHeight()-512,1024,512,0.0f);
 		SolidGround large = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 0,Display.getHeight()-512,1024,512,0.0f);
 		SolidGround large2 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 700,1000,1024,100,60f);
 		SolidGround large3 = new SolidGround(loadTexture("res/groundLarge.png","PNG"), 1350,1800,1024,100,40.0f);
@@ -79,6 +82,14 @@ public class GameObjects {
 		foreground.addElement(large29);
 		//System.out.println("x: " + foreground.getForegroundElements().get(1).getX() + ",y: " + foreground.getForegroundElements().get(1).getY());
 		
+	}
+	
+	public static void placeObject(){
+    	float mouseX = Mouse.getX();
+		float mouseY = Display.getHeight() - Mouse.getY();
+		
+		//foreground.addElement(new SolidGround(loadTexture("res/groundLarge.png","PNG"), mouseX,mouseY,1024,512,0.0f));
+		foreground.addElement(new SolidGround(loadTexture("res/grass.png","PNG"), mouseX,mouseY,1024,512,0.0f));
 	}
 	
 	public static float getStartX() {

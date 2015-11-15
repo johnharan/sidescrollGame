@@ -43,6 +43,30 @@ public class InputManager {
 		*/
 
 		
+		
+		int dWheel = Mouse.getDWheel();
+		
+	    if (dWheel < 0) {
+	        System.out.println("DOWN");
+	    } else if (dWheel > 0){
+	        System.out.println("UP");
+	   }
+		
+		
+		
+		while (Mouse.next()){
+		    if (Mouse.getEventButtonState()) {
+		        if (Mouse.getEventButton() == 0) {
+		            //System.out.println("Left button pressed");
+		        }
+		    }else {
+		        if (Mouse.getEventButton() == 0) {
+		        	GameObjects.placeObject();
+		        }
+		    }
+		}
+		
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_G)){
 			for (Foreground o : GameObjects.getForeground()
 					.getForegroundElements()) {
